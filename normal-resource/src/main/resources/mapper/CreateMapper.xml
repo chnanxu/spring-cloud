@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chen.mapper.CreateMapper">
+    <select id="getCommunityList" >
+        select community_id,community_name from community
+        order by month_times desc
+        OFFSET 0 ROW
+        FETCH NEXT 10 ROWS ONLY
+    </select>
+
+    <select id="getCommunityListByType" >
+        select community_id,community_name from community
+        where type_name=#{type_name}
+        order by week_times desc
+        OFFSET 0 ROW
+        FETCH NEXT 10 ROWS ONLY
+    </select>
+
+
+    <insert id="createNewProject" parameterType="Item_Details_Temp">
+        insert into item_details_temp values (#{uid},#{uname},#{pid},#{community_id},#{community_name},#{type_id},#{type_name},#{details_type},#{title},#{simple_text},#{content},#{cover_img},#{href},#{isOK},#{create_time},'')
+    </insert>   <!--创建新作品-->
+
+    <select id="getMyProjectCount">
+        select count(*) from item_Details where uid=#{uid} and isDeleted=0
+    </select>
+
+    <select id="getMyTempProjectCount">
+        select count(*) from item_details_temp where uid=#{uid} and (isOK=#{isOK} or isOK=-#{isOK})
+    </select>
+
+    <select id="getMyProjectByTime">
+        select * from item_details
+                 where uid=#{uid}
+                 order by create_time desc
+        OFFSET ${pageNumber} ROW
+        FETCH NEXT 6 ROWS ONLY
+        ;
+    </select>
+    <select id="getMyProjectByHot">
+        select * from item_details
+                 where uid=#{uid}
+                 order by read_times desc
+        OFFSET ${pageNumber} ROW
+            FETCH NEXT 6 ROWS ONLY;
+    </select>
+    <select id="getMyProjectByNoAgree">
+        select * from item_details_temp
+                 where uid=#{uid} and (isOK=-1 or isOK=1 )
+                 order by create_time desc
+        OFFSET ${pageNumber} ROW
+            FETCH NEXT 6 ROWS ONLY;
+    </select>
+    <select id="getMyProjectByDraft">
+        select * from item_details_temp
+                 where uid=#{uid} and isOK=0
+                 order by create_time desc
+        OFFSET ${pageNumber} ROW
+            FETCH NEXT 6 ROWS ONLY;
+    </select>
+
+    <select id="getMyProjectCoverImgSrc">
+        select cover_img from item_details where pid=#{pid}
+    </select>
+</mapper>

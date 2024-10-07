@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chen.mapper.UserMapper">
+
+    <select id="findByName" resultType="User">
+        select * from users where username=#{username} or phone=#{username} or email=#{username}
+    </select>  <!--根据username查找-->
+
+    <select id="findByUid" resultType="User">
+        select * from users where uid=#{uid}
+    </select>
+
+    <select id="findUserInfo" resultType="User">
+        select * from users where uid=#{uid}
+    </select>  <!--获取登录用户信息-->
+
+    <update id="onClock">
+        update users set exp_point=exp_point+100 where uid=#{uid}
+    </update>
+
+    <update id="syncUserInfo">
+        update users set email=#{email},phone=#{phone},sex=#{sex},sourceFrom=#{sourceFrom},location=#{location},level=#{level},exp_point=#{exp_point}
+        where uid=#{uid}
+    </update>
+
+    <select id="getUserLikeCommunityList">
+        select * from community where community_id in (select community_id from user_likecommunity where uid=#{uid})
+    </select>
+
+    <select id="findByUnameAndPwd" parameterType="java.lang.String" resultType="User">
+        select * from users where username=#{username} and password=#{password}
+    </select>  <!--验证账号和密码-->
+
+    <update id="updateUserImg" parameterType="java.lang.String" >
+        update users set user_img=#{user_img} where uid=#{uid}
+    </update>  <!--更新用户头像-->
+
+    <update id="updateUserInfo" parameterType="User">
+        update users set uname=#{uname},sex=#{sex},email=#{email},phone=#{phone} where uid=#{uid};
+        update item_comments set uname=#{uname} where uid=#{uid};
+        update item_details set uname=#{uname} where uid=#{uid}
+    </update>   <!--更新用户信息-->
+
+    <insert id="registerByEmail" parameterType="User" >
+        insert into users
+        values (#{uid},#{username},#{password},#{email},#{phone},#{sex},'images/default_user_img.jpg',#{sign_time},0,'',1);
+    </insert>  <!--邮箱注册-->
+
+    <insert id="registerByPhone" parameterType="User" >
+        insert into users
+        values (#{uid},#{username},#{password},#{email},#{phone},#{uname},#{sex},'images/default_user_img.jpg',#{sign_time},0,'',1);
+    </insert>  <!--手机号注册-->
+
+    <insert id="addUserLikeComment" parameterType="UserLikeComment">
+        insert into user_likecomments values (#{uid},#{pid},#{comment_id})
+        update item_comments set like_times=like_times+1 where comment_id=#{comment_id}
+    </insert>   <!--用户点赞的评论-->
+
+    <delete id="deleteUserLikeComment" parameterType="UserLikeComment">
+        delete from user_likecomments where uid=#{uid} and pid=#{pid} and comment_id=#{comment_id}
+        update item_comments set like_times=like_times-1 where comment_id=#{comment_id}
+    </delete>   <!--用户取消点赞的评论-->
+
+    <insert id="addLikeCommunity">
+        insert into user_likecommunity values (#{uid},#{community_id},null);
+    </insert>
+
+    <select id="getUserLikeCommunity">
+        select * from user_likecommunity where uid=#{uid} and community_id=#{community_id}
+    </select>
+
+    <select id="getUserComments">
+        select * from item_comments where uid=#{uid} and isDelete=0
+        order by update_time desc
+        OFFSET ${pageNum} ROW
+        FETCH NEXT 15 ROWS ONLY
+    </select>
+
+    <delete id="removeCommunity">
+        delete from user_likecommunity where uid=#{uid} and community_id=#{community_id}
+    </delete>
+
+    <select id="getUserLikeDetails">
+        select * from user_likedetails where uid=#{uid} and pid=#{pid}
+    </select> <!--获取用户喜欢列表 -->
+    <delete id="deleteUserLikeDetails">
+        delete from user_likedetails where uid=#{uid} and pid=#{pid}
+        update item_details set like_times=like_times-1 where pid=#{pid}
+    </delete>
+    <insert id="addUserLikeDetails">
+        insert into user_likedetails values(#{uid},#{pid},#{like_time})
+        update item_details set like_times=like_times+1 where pid=#{pid}
+    </insert>
+
+
+    <select id="getUserRecentLookCommunity">
+        select * from community as c,userlookcommunity_time as ut where ut.uid=#{uid} and ut.community_id=c.community_id order by last_sign_time desc
+        OFFSET 0 ROW
+        FETCH NEXT 5 ROWS ONLY
+    </select>
+
+    <select id="getUserLookCommunity">
+        select * from userlookcommunity_time where uid=#{uid} and community_id=#{community_id}
+    </select>
+
+    <insert id="insertUserLookCommunity">
+        insert into userlookcommunity_time values (#{uid},#{community_id},#{last_sign_time})
+        update community set
+            total_times=total_times+1,
+            day_times=day_times+1,
+            week_times=week_times+1,
+            month_times=month_times+1,
+            threemonth_times=threemonth_times+1,
+            sixmonth_times=sixmonth_times+1,
+            year_times=year_times+1 where community_id=#{community_id}
+    </insert>
+
+    <update id="updateUserSignTime">
+        update userlookcommunity_time set last_sign_time=#{last_sign_time} where uid=#{uid} and community_id=#{community_id}
+        update community set
+                             total_times=total_times+1,
+                             day_times=day_times+1,
+                             week_times=week_times+1,
+                             month_times=month_times+1,
+                             threemonth_times=threemonth_times+1,
+                             sixmonth_times=sixmonth_times+1,
+                             year_times=year_times+1 where community_id=#{community_id}
+    </update>
+
+    <select id="getUserLikeUser">
+        select * from user_likeuser where uid=#{uid} and like_uid=#{like_uid}
+    </select>
+    <insert id="likeUser">
+        insert into user_likeuser values(#{uid},#{like_uid})
+    </insert>
+    <delete id="cancelLikeUser">
+        delete from user_likeuser where uid=#{uid} and like_uid=#{like_uid}
+    </delete>
+
+    <select id="getUserLikeProject">
+        select * from user_likedetails where uid=#{uid} and pid=#{pid}
+    </select>
+
+    <update id="reduceBalance">
+        update users set balance=balance-#{amount} where uid=#{uid}
+    </update>
+
+    <insert id="reportProject">
+        insert into report_item values(#{pid},#{uid},#{uname},#{create_time},#{report_reason},#{report_content})
+    </insert>
+
+</mapper>
