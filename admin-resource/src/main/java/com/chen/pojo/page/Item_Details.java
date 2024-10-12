@@ -14,7 +14,7 @@ public class Item_Details {
     private String pid;
     private long community_id;
     private String community_name;
-    private String type_id;
+    private int type_id;
     private String type_name;
     private String detail_type;
     private String title;
@@ -22,6 +22,7 @@ public class Item_Details {
     private String content;
     private String cover_img;
     private String href;
+    private String tag;
     private String create_time;
     private long read_times;
     private long like_times;

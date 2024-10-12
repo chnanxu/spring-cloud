@@ -15,7 +15,7 @@ public interface CreateMapper {
 
     List<Map> getCommunityListByType(String type_name,int pageNum);
 
-    int createNewProject(Item_Details_Temp temp_item);  //新建作品
+    void createNewProject(Item_Details_Temp temp_item);  //新建作品
 
     int getMyProjectCount(String uid);
 

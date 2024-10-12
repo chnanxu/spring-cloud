@@ -2,6 +2,15 @@ package com.chen.utils.result;
 
 public enum PageCode implements ResultCode{
 
+    //获取成功
+    GET_SUCCESS(true,0,"获取数据成功"),
+
+    //获取数据失败
+    GET_FAILURE(false,1,"数据获取为空"),
+
+    //视频违规
+    DETAIL_TAKEOFF(false,1,"视频已被下架"),
+
     //评论成功
     COMMENT_SUCCESS(true,0,"评论成功"),
 

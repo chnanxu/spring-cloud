@@ -9,7 +9,7 @@
     </update>
 
     <select id="getPageDetails" resultType="Item_Details">
-        select * from item_details where pid=${pid}
+        select * from item_details where pid=${pid} and isTakeoff=0 and isDeleted=0
     </select>
 
     <select id="getAuthorOtherByUid">

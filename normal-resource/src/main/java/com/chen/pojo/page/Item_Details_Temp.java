@@ -3,12 +3,14 @@ package com.chen.pojo.page;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Item_Details_Temp {
+public class Item_Details_Temp extends Item_Details{
     private String uid;
     private String uname;
     private String pid;

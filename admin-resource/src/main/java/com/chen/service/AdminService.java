@@ -1,6 +1,7 @@
 package com.chen.service;
 
 
+import com.chen.pojo.admin.Admin_Left_Navbar;
 import com.chen.pojo.admin.ReportItem;
 import com.chen.pojo.community.Community;
 import com.chen.pojo.page.Item_Details;
@@ -15,6 +16,9 @@ import java.util.List;
 
 @Service
 public interface AdminService {
+
+    ResponseResult<List<Admin_Left_Navbar>> getAdminLeftNavbar();
+
     String refuseProject(String uid,long pid,String refuse_reason);
     String agreeProject(String uid,long pid);
 

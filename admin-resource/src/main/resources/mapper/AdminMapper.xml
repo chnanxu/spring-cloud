@@ -2,6 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chen.mapper.AdminMapper">
+    
+    <select id="getLeftNavbar">
+        select * from admin_left_navber
+        where root_id=0;
+    </select>
+
+    <select id="getSonLeftNavbar">
+        select * from admin_left_navber
+        where root_id=#{id}
+    </select>
 
     <select id="getUser" resultType="QueryUserResult">
         SELECT
@@ -75,7 +85,8 @@
     </update>
 
     <insert id="setProject" parameterType="Item_Details_Temp">
-        insert into item_details values (#{uid},#{uname},#{pid},#{community_id},#{community_name},#{type_id},#{type_name},#{details_type},#{title},#{simple_text},#{content},#{cover_img},#{href},#{create_time},0,0,0,0,0,0,0)
+        insert into item_details
+        values (#{uid},#{uname},#{pid},#{community_id},#{community_name},#{type_id},#{type_name},#{detail_type},#{title},#{simple_text},#{content},#{cover_img},#{href},#{tag},#{create_time},0,0,0,0,0,0,0)
         delete from item_details_temp where uid=#{uid} and pid=#{pid}
     </insert>
 

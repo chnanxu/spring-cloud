@@ -19,7 +19,7 @@ spring:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     username: sa
     password: woaini1398
-    url: jdbc:sqlserver://localhost:1433;databaseName=reactProject
+    url: jdbc:sqlserver://localhost:1433;databaseName=reactProject;encrypt=false;
   data:
     redis:
       port: 6379

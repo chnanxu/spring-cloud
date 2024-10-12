@@ -24,7 +24,9 @@ public class ResourceServerConfig {
 
         http.authorizeHttpRequests((authorize)->authorize
                 .anyRequest().authenticated())
-                .oauth2ResourceServer(adminResource->adminResource.jwt());
+                .oauth2ResourceServer(adminResource->adminResource.jwt(
+                        jwt->jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
+                ));
 
 
         return http.build();
@@ -50,11 +52,11 @@ public class ResourceServerConfig {
 
     @Bean
     JwtDecoder jwtDecoder(){
-        NimbusJwtDecoder jwtDecoder = JwtDecoders.fromIssuerLocation("http://192.168.31.139:8081");
+        NimbusJwtDecoder jwtDecoder = JwtDecoders.fromIssuerLocation("http://192.168.31.221:8081");
 
         OAuth2TokenValidator<Jwt> withClockSkew=new DelegatingOAuth2TokenValidator<>(
                 new JwtTimestampValidator(Duration.ofSeconds(60)),
-                new JwtIssuerValidator("http://192.168.31.139:8081")
+                new JwtIssuerValidator("http://192.168.31.221:8081")
         );
 
         jwtDecoder.setJwtValidator(withClockSkew);

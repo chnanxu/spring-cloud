@@ -1,6 +1,7 @@
 package com.chen.mapper;
 
 
+import com.chen.pojo.admin.Admin_Left_Navbar;
 import com.chen.pojo.admin.ReportItem;
 import com.chen.pojo.community.Community;
 import com.chen.pojo.page.Item_Details;
@@ -16,6 +17,11 @@ import java.util.List;
 @Mapper
 @Repository
 public interface AdminMapper {
+
+    List<Admin_Left_Navbar> getLeftNavbar();
+
+    List<Admin_Left_Navbar> getSonLeftNavbar(int id);
+
     List<User> getUser(int pageNum);
 
     List<Role> getRole(int pageNum);

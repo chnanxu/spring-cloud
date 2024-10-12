@@ -7,7 +7,7 @@
     </select>
 
     <select id="getUserProject">
-        select * from item_details where uid=#{uid}
+        select * from item_details where uid=#{uid} and isDeleted=0 and isTakeoff=0
         order by create_time desc
         OFFSET 0 ROW
         FETCH NEXT 10 ROWS ONLY

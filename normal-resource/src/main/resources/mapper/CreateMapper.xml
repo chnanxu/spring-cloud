@@ -19,7 +19,7 @@
 
 
     <insert id="createNewProject" parameterType="Item_Details_Temp">
-        insert into item_details_temp values (#{uid},#{uname},#{pid},#{community_id},#{community_name},#{type_id},#{type_name},#{details_type},#{title},#{simple_text},#{content},#{cover_img},#{href},#{isOK},#{create_time},'')
+        insert into item_details_temp values (#{uid},#{uname},#{pid},#{community_id},#{community_name},#{type_id},#{type_name},#{detail_type},#{title},#{simple_text},#{content},#{cover_img},#{href},#{isOK},#{create_time},'')
     </insert>   <!--创建新作品-->
 
     <select id="getMyProjectCount">

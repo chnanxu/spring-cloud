@@ -30,30 +30,22 @@ public class PageController {
 
     @GetMapping("/getPageDetails/{pid}")  //详细页面数据接口
     public ResponseResult<Item_Details> getPageDetails(@PathVariable long pid){
-
-
-        Item_Details result=pageService.getPageDetails(pid);
-        return new ResponseResult<>(CommonCode.SUCCESS,result);
+        
+        return pageService.getPageDetails(pid);
     }
 
     @GetMapping("/getAuthorOther/{uid}/{pid}") //作者其他作品接口
     public ResponseResult<List<Item_Details>> getAuthorOther(@PathVariable String uid,@PathVariable long pid){
 
-        List<Item_Details> result=pageService.getAuthorOther(uid,pid);
 
-        return new ResponseResult<>(CommonCode.SUCCESS,result);
+        return pageService.getAuthorOther(uid,pid);
     }
 
     @GetMapping("/getPageDetailsComments/{pid}")  //评论数据接口
-    public ResponseResult getPageDetailsComments(@PathVariable long pid){
+    public ResponseResult<List<Item_Comments>> getPageDetailsComments(@PathVariable long pid){
 
-        List<Item_Comments> result=pageService.getPageDetailsComments(pid);
 
-        if(result==null){
-            return new ResponseResult(CommonCode.SUCCESS,"当前没有评论");
-        }
-
-        return new ResponseResult(CommonCode.SUCCESS,result);
+        return pageService.getPageDetailsComments(pid);
     }
 
 

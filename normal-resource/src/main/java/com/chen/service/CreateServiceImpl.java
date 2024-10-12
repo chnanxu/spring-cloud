@@ -54,7 +54,7 @@ public class CreateServiceImpl implements CreateService{
 
 
         String path="D:\\developTools\\Workspace\\static\\images\\user_data\\"+uid+"\\project_data\\"+create_id+"\\"+id;
-        String newFileName="cover_img"+fileName.substring(fileName.lastIndexOf("."));
+        String newFileName="cover_img.avif";
 
         return getString(create_id, file, uid, id, path, newFileName);
     }
@@ -75,7 +75,7 @@ public class CreateServiceImpl implements CreateService{
 
         String path="D:\\developTools\\Workspace\\static\\images\\user_data\\"+uid+"\\project_data\\"+create_id+"\\"+id;
 
-        String newFileName="content_"+img_id+fileName.substring(fileName.lastIndexOf("."));
+        String newFileName="content_"+img_id+".avif";
 
         return getString(create_id, file, uid, id, path, newFileName);
     }
@@ -106,7 +106,7 @@ public class CreateServiceImpl implements CreateService{
             String id=redisCache.getCacheObject(uid+"create_id:");
             temp_item.setPid(id);
 
-            if(SensitiveWordHelper.contains(temp_item.getContent())){
+            if(temp_item.getDetail_type().equals("article") && SensitiveWordHelper.contains(temp_item.getContent())){
                 return "内容含有敏感词";
             }
 

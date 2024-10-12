@@ -22,6 +22,7 @@ public class Item_Details_Temp {
     private String content;
     private String cover_img;
     private String href;
+    private String tag;
     private int isOK;
     private String create_time;
 

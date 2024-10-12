@@ -14,11 +14,11 @@ import java.util.List;
 public interface PageService {
 
 
-    Item_Details getPageDetails(long pid);
+    ResponseResult<Item_Details> getPageDetails(long pid);
 
-    List<Item_Details> getAuthorOther(String uid,long pid);
+    ResponseResult<List<Item_Details>> getAuthorOther(String uid,long pid);
 
-    List<Item_Comments> getPageDetailsComments(long pid);
+    ResponseResult<List<Item_Comments>> getPageDetailsComments(long pid);
 
     List<Item_Comments> getAllSonComment(long pid,long comment_id);
 

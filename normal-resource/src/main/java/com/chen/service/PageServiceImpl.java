@@ -49,29 +49,40 @@ public class PageServiceImpl implements PageService{
 
 
     @Override
-    public Item_Details getPageDetails(long pid) {
+    public ResponseResult<Item_Details> getPageDetails(long pid) {
 
         pageMapper.addReadTimes(pid);
 
-        return pageMapper.getPageDetails(pid);
+        Item_Details result= pageMapper.getPageDetails(pid);
+
+        if(result==null){
+            return new ResponseResult<>(PageCode.DETAIL_TAKEOFF,null);
+        }else{
+            return new ResponseResult<>(PageCode.GET_SUCCESS,result);
+        }
+
+
     }
 
     @Override
-    public List<Item_Details> getAuthorOther(String uid ,long pid) {
+    public ResponseResult<List<Item_Details>> getAuthorOther(String uid ,long pid) {
 
+        List<Item_Details> result=pageMapper.getAuthorOtherByUid(uid,pid);
 
+        if(result==null){
+            return new ResponseResult<>(PageCode.GET_FAILURE,null);
+        }
 
-        return  pageMapper.getAuthorOtherByUid(uid,pid);
+        return new ResponseResult<>(PageCode.GET_SUCCESS,result);
     }
 
     @Override
-    public List<Item_Comments> getPageDetailsComments(long pid) {
+    public ResponseResult<List<Item_Comments>> getPageDetailsComments(long pid) {
         List<Item_Comments> rootComments;
 
         rootComments= pageMapper.getPageDetailsComments(pid);   //获取顶级评论列表
 
-
-        return getItemComments(pid, rootComments);
+        return new ResponseResult<>(PageCode.GET_SUCCESS,getItemComments(pid, rootComments));
     }
 
     @Override
