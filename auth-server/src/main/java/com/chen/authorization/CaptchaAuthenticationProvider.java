@@ -4,6 +4,7 @@ import com.chen.exception.InvalidCaptchaException;
 import com.chen.utils.util.RedisCache;
 import com.chen.utils.util.SecurityConstants;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -18,7 +19,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Objects;
 
-import static com.chen.utils.util.RedisConstants.IMAGE_CAPTCHA_PREFIX_KEY;
+import static util.RedisConstants.IMAGE_CAPTCHA_PREFIX_KEY;
 
 
 /**
@@ -30,6 +31,7 @@ import static com.chen.utils.util.RedisConstants.IMAGE_CAPTCHA_PREFIX_KEY;
  * @author vains
  */
 @Slf4j
+@RequiredArgsConstructor
 public class CaptchaAuthenticationProvider extends DaoAuthenticationProvider {
 
     private final RedisCache redisCache;

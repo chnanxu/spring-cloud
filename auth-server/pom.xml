@@ -18,6 +18,14 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
+
+		<dependency>
+			<groupId>com.chen</groupId>
+			<artifactId>common_utils</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+
 		<!-- Spring Authorization Server -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

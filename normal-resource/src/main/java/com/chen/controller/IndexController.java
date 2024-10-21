@@ -2,16 +2,18 @@ package com.chen.controller;
 
 
 import com.chen.pojo.page.All_Type;
+import com.chen.pojo.page.HotTag;
 import com.chen.pojo.page.Item_Details;
 import com.chen.service.IndexService;
-import com.chen.utils.result.CommonCode;
-import com.chen.utils.result.ResponseResult;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import result.CommonCode;
+import result.ResponseResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,11 @@ public class IndexController {
 
         List<All_Type> result=indexService.getTypeList();
         return new ResponseResult<>(CommonCode.SUCCESS,result);
+    }
+
+    @GetMapping(value = {"/getHotTag/{keywords}/{pageNumber}","/getHotTag/{pageNumber}"})
+    public ResponseResult<List<HotTag>> getHotTag(@PathVariable(required = false) String keywords,@PathVariable int pageNumber){
+        return indexService.getHotTag(keywords,pageNumber);
     }
 
 

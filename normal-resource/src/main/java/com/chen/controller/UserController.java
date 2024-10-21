@@ -7,14 +7,13 @@ import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.pojo.user.User;
 import com.chen.service.UserDetailService;
 import com.chen.service.UserService;
-import com.chen.utils.result.CommonCode;
-import com.chen.utils.result.ResponseResult;
 
-import com.chen.utils.util.RedisCache;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import result.CommonCode;
+import result.ResponseResult;
 
 import java.util.List;
 

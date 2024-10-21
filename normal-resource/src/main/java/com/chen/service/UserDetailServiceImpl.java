@@ -9,7 +9,6 @@ import com.chen.mapper.UserMapper;
 import com.chen.pojo.user.Oauth2ThirdAccount;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.pojo.user.User;
-import com.chen.utils.util.SecurityConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.Authentication;
@@ -19,22 +18,21 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import util.SecurityConstants;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.chen.utils.util.SecurityConstants.OAUTH_LOGIN_TYPE;
-import static com.chen.utils.util.SecurityConstants.TOKEN_UNIQUE_ID;
+import static util.SecurityConstants.OAUTH_LOGIN_TYPE;
+import static util.SecurityConstants.TOKEN_UNIQUE_ID;
+
 
 @Service
 @RequiredArgsConstructor
 public class UserDetailServiceImpl extends ServiceImpl<Oauth2BasicUserMapper,User> implements UserDetailService{
 
     private final UserMapper userMapper;
-
 
     private final ThirdAccountMapper thirdAccountMapper;
 
@@ -133,8 +131,9 @@ public class UserDetailServiceImpl extends ServiceImpl<Oauth2BasicUserMapper,Use
                 if (exp_point>=1000){
                     user.setLevel(user.getLevel()+1);
                     user.setExp_point(0);
+                    break;
                 }
-                break;
+
             case 1:
                 if (exp_point>=2000){
                     user.setLevel(user.getLevel()+1);
@@ -293,6 +292,7 @@ public class UserDetailServiceImpl extends ServiceImpl<Oauth2BasicUserMapper,Use
                 break;
 
         }
+        user.setUp_need_exp((level+1)*1000);
 
         return user;
     }

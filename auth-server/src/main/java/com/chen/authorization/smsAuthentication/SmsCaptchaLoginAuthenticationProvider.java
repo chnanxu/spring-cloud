@@ -7,6 +7,7 @@ import com.chen.service.UserDetailService;
 import com.chen.utils.util.RedisCache;
 import com.chen.utils.util.SecurityConstants;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +22,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Objects;
 
-import static com.chen.utils.util.RedisConstants.SMS_CAPTCHA_PREFIX_KEY;
+import static util.RedisConstants.SMS_CAPTCHA_PREFIX_KEY;
 
 
 /**
@@ -43,8 +44,9 @@ public class SmsCaptchaLoginAuthenticationProvider extends CaptchaAuthentication
      * @param userDetailService 用户服务，给框架提供用户信息
      * @param passwordEncoder    密码解析器，用于加密和校验密码
      */
-    public SmsCaptchaLoginAuthenticationProvider(UserDetailService userDetailService, PasswordEncoder passwordEncoder, RedisCache redisCache) {
-        super(userDetailService, passwordEncoder, redisCache);
+    public SmsCaptchaLoginAuthenticationProvider(UserDetailService userDetailService, PasswordEncoder passwordEncoder, RedisCache rediscache, RedisCache redisCache) {
+        super(userDetailService, passwordEncoder,rediscache);
+
         this.redisCache = redisCache;
     }
 

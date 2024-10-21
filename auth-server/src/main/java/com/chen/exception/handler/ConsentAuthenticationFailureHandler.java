@@ -2,7 +2,6 @@ package com.chen.exception.handler;
 
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.ResponseResult;
-import com.chen.utils.util.JsonUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +15,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.util.UrlUtils;
+import util.JsonUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

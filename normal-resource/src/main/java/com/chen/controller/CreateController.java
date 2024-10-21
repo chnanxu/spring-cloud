@@ -5,12 +5,14 @@ import com.chen.pojo.page.Item_Details_Temp;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.service.CreateService;
 import com.chen.service.UserDetailService;
-import com.chen.utils.result.CommonCode;
-import com.chen.utils.result.ResponseResult;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import result.CommonCode;
+import result.ResponseResult;
+
 import java.util.List;
 
 
@@ -24,7 +26,7 @@ public class CreateController {
     private final UserDetailService userDetailService;
 
     @GetMapping("/getCommunityList/{queryType}/{pageNum}")
-    public ResponseResult getCommunityList(@PathVariable String queryType,@PathVariable int pageNum){
+    public ResponseResult getCommunityList(@PathVariable String queryType, @PathVariable int pageNum){
 
         return new ResponseResult(CommonCode.SUCCESS,createService.getCommunityListByQueryType(queryType,pageNum));
     }
@@ -46,14 +48,17 @@ public class CreateController {
     }
 
 
-    @PostMapping("/newProjectImg/{create_id}/{img_id}")  //内容图片上传接口
-    public ResponseResult newProjectImg(@PathVariable String create_id,@PathVariable String img_id,@RequestParam("file") MultipartFile file){
+    @PostMapping(value={"/newProjectImg/{create_id}/{img_id}","/newProjectImg/{pid}/{img_id}"})  //内容图片上传接口
+    public ResponseResult newProjectImg(@PathVariable(required = false) String create_id,@PathVariable(required = false) String pid,@PathVariable String img_id,@RequestParam("file") MultipartFile file){
 
         Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
 
-        String message=createService.newProjectImg(create_id,img_id,file,user.getUid());
+        if(pid==null){
+            return createService.newProjectImg(create_id,img_id,file,user.getUid());
+        }else{
+            return createService.updateContentImg(pid,img_id,file);
+        }
 
-        return new ResponseResult(CommonCode.SUCCESS,message);
     }
 
 
@@ -62,9 +67,25 @@ public class CreateController {
 
         Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
 
-        String message=createService.newProject(temp_item,user.getUid());
 
-        return new ResponseResult(CommonCode.SUCCESS,message);
+
+        return createService.newProject(temp_item,user.getUid());
+    }
+
+
+    @PostMapping("/updateCoverImg/{pid}")  //更新封面
+    public ResponseResult updateCoverImg(@PathVariable String pid,@RequestParam("file") MultipartFile file){
+
+        String url=createService.updateCoverImg(pid,file);
+
+        return new ResponseResult(CommonCode.SUCCESS,url);
+    }
+
+    @PostMapping("/reUploadProject")  //更新作品
+    public ResponseResult reUploadProject(@RequestBody Item_Details_Temp temp_item){
+
+
+        return createService.reUploadProject(temp_item);
     }
 
     @PostMapping("/uploadVideo/{create_id}")   //上传视频
@@ -81,13 +102,11 @@ public class CreateController {
     public ResponseResult saveTempProject(@RequestBody Item_Details_Temp temp_item){
         Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
 
-        String message=createService.newProject(temp_item,user.getUid());
-
-        return new ResponseResult(CommonCode.SUCCESS,message);
+        return createService.newProject(temp_item,user.getUid());
     }
 
     @GetMapping("/getMyProjectCount/{uid}/{sortType}")   //获取我的作品数量
-    public ResponseResult getMyProjectCount(@PathVariable String uid,@PathVariable String sortType){
+    public ResponseResult<Integer> getMyProjectCount(@PathVariable String uid,@PathVariable String sortType){
         return new ResponseResult(CommonCode.SUCCESS,createService.getMyProjectCount(uid,sortType));
     }
 
@@ -95,20 +114,20 @@ public class CreateController {
     public ResponseResult getMyProject(@PathVariable String uid,@PathVariable String sortType,@PathVariable int pageNumber){
 
         if(sortType.equals("waitAgree") || sortType.equals("draft")){
-            return new ResponseResult(CommonCode.SUCCESS,createService.getMyProjectTemp(uid,sortType,pageNumber*6-6));
+            return createService.getMyProjectTemp(uid,sortType,pageNumber*6-6);
         }
-        List<Item_Details> result= createService.getMyProject(uid,sortType,pageNumber*6-6);
 
-        return new ResponseResult(CommonCode.SUCCESS,result);
+        return createService.getMyProject(uid,sortType,pageNumber*6-6);
     }
 
-    @PostMapping("/updateCoverImg/{pid}")
-    public ResponseResult updateCoverImg(@PathVariable long pid,@RequestParam("file") MultipartFile file){
-
-        String url=createService.updateCoverImg(pid,file);
-
-        return new ResponseResult(CommonCode.SUCCESS,url);
+    @GetMapping("/deleteMyProject/{pid}")
+    public ResponseResult<String> deleteMyProject(@PathVariable String pid){
+        return createService.deleteMyProject(pid);
     }
 
+    @GetMapping("/takeoffProject/{pid}")
+    public ResponseResult<String> takeoffProject(@PathVariable String pid){
+        return createService.takeoffProject(pid);
+    }
 
 }

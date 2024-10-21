@@ -2,20 +2,19 @@ package com.chen.controller;
 
 
 import com.chen.mapper.AdminMapper;
+import com.chen.pojo.admin.Admin_Left_Navbar;
 import com.chen.pojo.admin.ReportItem;
 import com.chen.pojo.community.Community;
-import com.chen.pojo.page.Item_Details;
-import com.chen.pojo.page.Item_Details_Temp;
 import com.chen.pojo.permission.Role;
 import com.chen.pojo.user.User;
 import com.chen.pojo.user.UserRole;
 import com.chen.service.AdminService;
-import com.chen.utils.result.CommonCode;
-import com.chen.utils.result.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import result.CommonCode;
+import result.ResponseResult;
 
 import java.util.List;
 
@@ -28,6 +27,11 @@ public class AdminController {
 
     private final AdminService adminService;
 
+    @GetMapping("/getAdminLeftNavbar")
+    public ResponseResult<List<Admin_Left_Navbar>> getAdminLeftNavbar(){
+
+        return adminService.getAdminLeftNavbar();
+    }
     @GetMapping("/getUser/{pageNum}")   //批量获取用户
     public ResponseResult<List<User>> getUser(@PathVariable int pageNum){
 

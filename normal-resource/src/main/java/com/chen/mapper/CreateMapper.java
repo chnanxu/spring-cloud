@@ -11,13 +11,15 @@ import java.util.Map;
 @Mapper
 @Repository
 public interface CreateMapper {
-    List<Map> getCommunityList();
 
-    List<Map> getCommunityListByType(String type_name,int pageNum);
+    Item_Details findProjectByPid(String pid);  //根据pid获取作品
+    List<Map> getCommunityList();   //获取社区列表
+
+    List<Map> getCommunityListByType(String type_name,int pageNum);   //根据类型获取社区列表
 
     void createNewProject(Item_Details_Temp temp_item);  //新建作品
 
-    int getMyProjectCount(String uid);
+    int getMyProjectCount(String uid);   //获取作品数量
 
     int getMyTempProjectCount(String uid,int isOK);
 
@@ -29,5 +31,11 @@ public interface CreateMapper {
 
     List<Item_Details_Temp> getMyProjectByDraft(String uid,int pageNumber);   //获取我的草稿
 
-    String getMyProjectCoverImgSrc(long pid);
+    List<Item_Details> getMyProjectTakeoff(String uid,int pageNumber); //获取已下架作品
+
+    String getMyProjectCoverImgSrc(String pid);
+
+    int takeoffProject(String pid);  //下架作品
+
+    void deleteMyProject(String pid,String uid);//删除作品,不可逆
 }

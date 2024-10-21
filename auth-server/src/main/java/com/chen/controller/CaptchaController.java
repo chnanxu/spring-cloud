@@ -22,7 +22,8 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.chen.utils.util.RedisConstants.*;
+import static util.RedisConstants.*;
+
 
 @Slf4j
 @Controller
@@ -34,20 +35,20 @@ public class CaptchaController {
 
     private final RedisCache redisCache;
     @SneakyThrows
-    @RequestMapping ("/captcha")
-    public void getCaptcha(HttpServletRequest request, HttpServletResponse response){
-        response.setContentType("image/jpeg");
+    @RequestMapping ("/captcha/{captchaId}")
+    public void getCaptcha(HttpServletRequest request, HttpServletResponse response,@PathVariable String captchaId){
+        response.setContentType("image/avif");
 
         String capText=producer.createText();
         log.info("验证码:{}",capText);
         request.getSession().setAttribute("captcha",capText);
-        redisCache.setCacheObject((IMAGE_CAPTCHA_PREFIX_KEY +"captchaId"), capText, DEFAULT_TIMEOUT_SECONDS);
+        redisCache.setCacheObject((IMAGE_CAPTCHA_PREFIX_KEY +captchaId), capText, DEFAULT_TIMEOUT_SECONDS);
         BufferedImage image=producer.createImage(capText);
         OutputStream out=response.getOutputStream();
 
+        ImageIO.write(image,"avif",out);
 
-
-        ImageIO.write(image,"jpg",out);
+        out.close();
     }
 
     @ResponseBody

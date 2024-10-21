@@ -7,11 +7,12 @@ import com.chen.pojo.community.CommunityModule;
 import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.user.OnlineUser;
 import com.chen.service.CommunityService;
-import com.chen.utils.result.CommonCode;
-import com.chen.utils.result.ResponseResult;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
+import result.CommonCode;
+import result.ResponseResult;
 
 import java.util.LinkedList;
 import java.util.List;

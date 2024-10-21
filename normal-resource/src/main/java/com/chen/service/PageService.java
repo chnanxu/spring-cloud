@@ -5,8 +5,8 @@ import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.page.My_Earnings;
 import com.chen.pojo.page.ReportItem;
 import com.chen.pojo.user.UserLikeComment;
-import com.chen.utils.result.ResponseResult;
 import org.springframework.stereotype.Service;
+import result.ResponseResult;
 
 import java.util.List;
 

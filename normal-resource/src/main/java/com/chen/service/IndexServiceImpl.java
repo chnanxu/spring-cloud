@@ -4,12 +4,15 @@ import com.chen.mapper.CommunityMapper;
 import com.chen.mapper.IndexMapper;
 import com.chen.pojo.community.Community;
 import com.chen.pojo.page.All_Type;
+import com.chen.pojo.page.HotTag;
 import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.pojo.user.UserPersonalize;
 import com.chen.utils.util.RedisCache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import result.CommonCode;
+import result.ResponseResult;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,6 +39,18 @@ public class IndexServiceImpl implements IndexService {
     @Override
     public List<All_Type> getTypeList() {
         return indexMapper.getTypeList();
+    }
+
+    @Override
+    public ResponseResult<List<HotTag>> getHotTag(String keywords,int pageNumber) {
+
+        if(keywords==null || keywords.isEmpty()){
+            return new ResponseResult<>(CommonCode.SUCCESS,indexMapper.getHotTag(pageNumber*10-10));
+        }else{
+            return new ResponseResult<>(CommonCode.SUCCESS,indexMapper.getHotTagByKeywords(keywords,pageNumber*10-10));
+        }
+
+
     }
 
     @Override

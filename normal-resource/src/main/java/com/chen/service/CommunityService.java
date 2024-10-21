@@ -4,8 +4,9 @@ import com.chen.pojo.community.Community;
 import com.chen.pojo.community.CommunityLeftNav;
 import com.chen.pojo.community.CommunityModule;
 import com.chen.pojo.page.Item_Details;
-import com.chen.utils.result.ResponseResult;
+
 import org.springframework.stereotype.Service;
+import result.ResponseResult;
 
 import java.util.List;
 import java.util.Map;

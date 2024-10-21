@@ -4,6 +4,7 @@ package com.chen.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.chen.pojo.community.Community;
 import com.chen.pojo.page.All_Type;
+import com.chen.pojo.page.HotTag;
 import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.user.UserPersonalize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -21,6 +22,10 @@ public interface IndexMapper extends BaseMapper {
     List<String> getHeaderItem();
 
     List<String> getLeftNavbar();
+
+    List<HotTag> getHotTag(int pageNumber);
+
+    List<HotTag> getHotTagByKeywords(String keywords,int pageNumber);
 
     List<All_Type> getTypeList();
 

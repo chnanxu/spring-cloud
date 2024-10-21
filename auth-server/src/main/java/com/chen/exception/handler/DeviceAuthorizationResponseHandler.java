@@ -2,7 +2,6 @@ package com.chen.exception.handler;
 
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.ResponseResult;
-import com.chen.utils.util.JsonUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import util.JsonUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

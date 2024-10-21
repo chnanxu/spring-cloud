@@ -2,8 +2,10 @@ package com.chen.service;
 
 
 import com.chen.pojo.page.All_Type;
+import com.chen.pojo.page.HotTag;
 import com.chen.pojo.page.Item_Details;
 import org.springframework.stereotype.Service;
+import result.ResponseResult;
 
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,9 @@ public interface IndexService {
     List<String> getLeftNavbar();
 
     List<All_Type> getTypeList();
+
+    ResponseResult<List<HotTag>> getHotTag(String keywords,int pageNumber);
+
 
     List<Item_Details> getIndex(int type_id,String articleType);
 

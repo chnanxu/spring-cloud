@@ -8,12 +8,12 @@ import com.chen.pojo.page.My_Earnings;
 import com.chen.pojo.page.ReportItem;
 import com.chen.pojo.user.UserLikeComment;
 import com.chen.service.PageService;
-import com.chen.utils.result.CommonCode;
-import com.chen.utils.result.PageCode;
-import com.chen.utils.result.ResponseResult;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import result.CommonCode;
+import result.ResponseResult;
 
 import java.util.List;
 

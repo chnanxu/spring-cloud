@@ -11,6 +11,21 @@
         select * from all_type
     </select>
 
+    <select id="getHotTag">
+        select * from hottag
+        order by use_times desc
+        OFFSET ${pageNumber} ROW
+        FETCH NEXT 10 ROWS ONLY
+    </select>
+
+    <select id="getHotTagByKeywords">
+        select * from hottag
+                 where tag like '%'+#{keywords}+'%'
+        order by use_times desc
+        OFFSET ${pageNumber} ROW
+        FETCH NEXT 10 ROWS ONLY
+    </select>
+
     <select id="getLeftNavbar" resultType="Left_NavbarItem">
         select * from left_navbar_item
     </select>
@@ -24,7 +39,7 @@
     </select>
 
     <select id="findIndexByType_id" parameterType="int" resultType= "Item_Details">
-        select uid,uname,pid,type_id,type_name,detail_type,title,simple_text,content,cover_img,href,tag,create_time,read_times,like_times,comments_times,favorites,day_times
+        select uid,uname,pid,type_id,type_name,detail_type,title,simple_text,content,cover_img,href,tag,create_time,read_times,like_times,comments_times,favorites
         from item_details
         where isDeleted=0 and isTakeoff=0 and type_id=${type_id} and detail_type=#{articleType}
         order by favorites desc
@@ -33,7 +48,7 @@
     </select>
 
     <select id="findIndexByRandom">
-        select uid,uname,pid,type_id,type_name,detail_type,title,simple_text,content,cover_img,href,tag,create_time,read_times,like_times,comments_times,favorites,day_times
+        select uid,uname,pid,type_id,type_name,detail_type,title,simple_text,content,cover_img,href,tag,create_time,read_times,like_times,comments_times,favorites
         from item_details
         where isDeleted=0 and isTakeoff=0 and detail_type=#{articleType}
         order by create_time desc
@@ -42,7 +57,7 @@
     </select>
 
     <select id="findIndexByPercent" resultType="Item_Details">
-        select uid,uname,pid,type_id,type_name,detail_type,title,simple_text,content,cover_img,href,tag,create_time,read_times,like_times,comments_times,favorites,day_times
+        select uid,uname,pid,type_id,type_name,detail_type,title,simple_text,content,cover_img,href,tag,create_time,read_times,like_times,comments_times,favorites
         from item_details
         where isDeleted=0 and isTakeoff=0 and type_id=#{type_id} and detail_type=#{articleType}
         order by create_time desc

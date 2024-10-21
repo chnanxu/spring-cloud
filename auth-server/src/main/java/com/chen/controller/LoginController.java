@@ -8,18 +8,13 @@ import com.chen.service.UserDetailService;
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.ResponseResult;
 import com.chen.utils.result.UserCode;
-import com.chen.utils.util.RedisCache;
-import com.chen.utils.util.RedisConstants;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import util.RedisCache;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
-import static com.chen.utils.util.RedisConstants.SMS_CAPTCHA_PREFIX_KEY;
 
 
 @PreAuthorize("permitAll()")
@@ -28,7 +23,7 @@ import static com.chen.utils.util.RedisConstants.SMS_CAPTCHA_PREFIX_KEY;
 public class LoginController {
 
     private final UserDetailService userDetailService;
-    private final RedisCache redisCache;
+    private final RedisCache redisCache=new RedisCache();
 
     @PostMapping("/reg")
     @ResponseBody

@@ -5,8 +5,6 @@ import cn.hutool.extra.qrcode.QrConfig;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.chen.utils.qrCode.*;
-import com.chen.utils.util.CustomSecurityProperties;
-import com.chen.utils.util.RedisCache;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -32,6 +30,8 @@ import org.springframework.util.Assert;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import util.CustomSecurityProperties;
+import util.RedisCache;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -45,9 +45,9 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 @RequiredArgsConstructor
 public class IQrCodeLoginServiceImpl implements IQrCodeLoginService {
 
-    private final RedisCache redisCache;
+    private final RedisCache redisCache=new RedisCache();
 
-    private final CustomSecurityProperties customSecurityProperties;
+    private final CustomSecurityProperties customSecurityProperties=new CustomSecurityProperties();
 
     private final RedisOAuth2AuthorizationService authorizationService;
 

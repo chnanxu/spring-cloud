@@ -86,7 +86,7 @@
 
     <insert id="setProject" parameterType="Item_Details_Temp">
         insert into item_details
-        values (#{uid},#{uname},#{pid},#{community_id},#{community_name},#{type_id},#{type_name},#{detail_type},#{title},#{simple_text},#{content},#{cover_img},#{href},#{tag},#{create_time},0,0,0,0,0,0,0)
+        values (#{uid},#{uname},#{pid},#{community_id},#{community_name},#{type_id},#{type_name},#{detail_type},#{title},#{simple_text},#{content},#{cover_img},#{href},#{tag},#{create_time},0,0,0,0,0,0)
         delete from item_details_temp where uid=#{uid} and pid=#{pid}
     </insert>
 

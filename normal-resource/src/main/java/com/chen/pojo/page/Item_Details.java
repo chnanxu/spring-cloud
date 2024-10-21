@@ -28,7 +28,6 @@ public class Item_Details {
     private long like_times;
     private long comments_times;
     private long favorites;
-    private long day_times;
     private boolean isDeleted;
 
     @Transient

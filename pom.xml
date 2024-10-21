@@ -20,7 +20,8 @@
 		<module>admin-resource</module>
 		<module>normal-resource</module>
 		<module>webflux-resource</module>
-	</modules>
+        <module>common</module>
+    </modules>
 	<url/>
 	<licenses>
 		<license/>

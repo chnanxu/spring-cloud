@@ -32,6 +32,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.CorsFilter;
 
+import util.JsonUtils;
+
+
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -240,7 +243,7 @@ public class SecurityUtils {
                         .accessDeniedHandler(SecurityUtils::exceptionHandler)
                         .authenticationEntryPoint(SecurityUtils::exceptionHandler))
 
-                .logout(logout->logout.logoutSuccessHandler(new LogoutSuccessHandlerImpl(new RedisCache())));
+                .logout(logout->logout.logoutSuccessHandler(new LogoutSuccessHandlerImpl()));
 
 //        http.logout(logout->logout.invalidateHttpSession(true).logoutSuccessHandler(new LogoutSuccessHandlerImpl(new RedisCache())));
 //

@@ -11,7 +11,9 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Component
+
 public class RedisCache {
+
     @Resource
     public RedisTemplate redisTemplate;
 

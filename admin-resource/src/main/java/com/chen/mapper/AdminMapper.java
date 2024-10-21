@@ -4,13 +4,13 @@ package com.chen.mapper;
 import com.chen.pojo.admin.Admin_Left_Navbar;
 import com.chen.pojo.admin.ReportItem;
 import com.chen.pojo.community.Community;
-import com.chen.pojo.page.Item_Details;
-import com.chen.pojo.page.Item_Details_Temp;
 import com.chen.pojo.permission.Role;
 import com.chen.pojo.user.User;
 import com.chen.pojo.user.UserRole;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
+import pojo.Item_Details;
+import pojo.Item_Details_Temp;
 
 import java.util.List;
 

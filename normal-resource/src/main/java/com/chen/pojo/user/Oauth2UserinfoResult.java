@@ -82,6 +82,11 @@ public class Oauth2UserinfoResult implements Serializable {
     private int exp_point;
 
     /**
+     * 升级所需经验
+     */
+    private int up_need_exp;
+
+    /**
      * 订阅人数
      */
     private int subscription_count;

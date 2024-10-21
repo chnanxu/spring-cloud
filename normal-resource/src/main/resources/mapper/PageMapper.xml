@@ -13,7 +13,8 @@
     </select>
 
     <select id="getAuthorOtherByUid">
-        select * from item_details where uid=#{uid} and pid&lt;>#{pid}
+        select * from item_details
+                 where uid=#{uid} and pid&lt;>#{pid} and isTakeoff=0 and isDeleted=0
         order by read_times
         OFFSET 0 ROW
             FETCH NEXT 5 ROWS ONLY

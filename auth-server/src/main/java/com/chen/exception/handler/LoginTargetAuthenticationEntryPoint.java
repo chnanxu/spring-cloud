@@ -3,7 +3,6 @@ package com.chen.exception.handler;
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.ResponseResult;
 import com.chen.utils.result.UserCode;
-import com.chen.utils.util.JsonUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,6 +15,7 @@ import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.UrlUtils;
 import org.springframework.util.ObjectUtils;
+import util.JsonUtils;
 
 import java.io.IOException;
 import java.net.URLEncoder;

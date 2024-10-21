@@ -1,17 +1,17 @@
 package com.chen.controller;
 
 import com.chen.mapper.AdminMapper;
-import com.chen.pojo.page.Item_Details;
-import com.chen.pojo.page.Item_Details_Temp;
 import com.chen.service.AdminService;
-import com.chen.utils.result.CommonCode;
-import com.chen.utils.result.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pojo.Item_Details;
+import pojo.Item_Details_Temp;
+import result.CommonCode;
+import result.ResponseResult;
 
 import java.util.List;
 

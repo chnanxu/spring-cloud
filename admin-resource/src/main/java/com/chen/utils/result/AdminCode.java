@@ -1,6 +1,8 @@
 package com.chen.utils.result;
 
-public enum AdminCode implements ResultCode{
+import result.ResultCode;
+
+public enum AdminCode implements ResultCode {
 
     GET_SUCCESS(true,0,"获取成功")
     ;
