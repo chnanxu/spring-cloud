@@ -5,6 +5,7 @@ import com.chen.utils.util.RedisCache;
 import com.chen.utils.util.SecurityConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -16,10 +17,9 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
 import java.util.Objects;
 
-import static util.RedisConstants.IMAGE_CAPTCHA_PREFIX_KEY;
+import static com.chen.utils.util.RedisConstants.IMAGE_CAPTCHA_PREFIX_KEY;
 
 
 /**

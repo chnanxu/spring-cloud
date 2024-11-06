@@ -21,9 +21,7 @@ import java.awt.image.BufferedImage;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import static util.RedisConstants.*;
-
+import static com.chen.utils.util.RedisConstants.*;
 
 @Slf4j
 @Controller
@@ -37,7 +35,7 @@ public class CaptchaController {
     @SneakyThrows
     @RequestMapping ("/captcha/{captchaId}")
     public void getCaptcha(HttpServletRequest request, HttpServletResponse response,@PathVariable String captchaId){
-        response.setContentType("image/avif");
+        response.setContentType("image/jpg");
 
         String capText=producer.createText();
         log.info("验证码:{}",capText);
@@ -46,7 +44,7 @@ public class CaptchaController {
         BufferedImage image=producer.createImage(capText);
         OutputStream out=response.getOutputStream();
 
-        ImageIO.write(image,"avif",out);
+        ImageIO.write(image,"jpg",out);
 
         out.close();
     }

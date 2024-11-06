@@ -15,6 +15,8 @@ public interface UserMapper extends IService<User> {
 
     int registerByPhone(User user);   //根据手机号注册用户
 
+    void createUser(User user);//创建用户
+
     User findByName(String username);  //根据昵称查找
 
     User findByUid(String uid);  //根据uid查找

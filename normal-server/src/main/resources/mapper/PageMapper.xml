@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chen.mapper.PageMapper">
+
+
+    <update id="addReadTimes">
+        update item_details set read_times=read_times+1 where pid=#{pid}
+    </update>
+
+    <select id="getPageDetails" resultType="Item_Details">
+        select * from item_details where pid=${pid} and isTakeoff=0 and isDeleted=0
+    </select>
+
+    <select id="getAuthorOtherByUid">
+        select * from item_details
+                 where uid=#{uid} and pid&lt;>#{pid} and isTakeoff=0 and isDeleted=0
+        order by read_times
+        LIMIT 0,5
+    </select>
+
+
+    <select id="getPageDetailsComments" resultType="Item_Comments">
+        select A.comment_id,A.content,A.like_times,A.uid,A.uname,A.isDelete,A.update_time,A.location,A.reuname,count(B.comment_id)-3 as sonCommentCount
+        from item_comments A left join item_comments B
+        on A.comment_id=B.root_commentID and A.isDelete=B.isDelete
+        where A.root_commentID=0 and A.pid=#{pid} and A.isDelete=0
+        group by A.comment_id,A.content,A.like_times,A.uid,A.uname,A.isDelete,A.update_time,A.location,A.reuname
+        order by A.update_time desc
+        LIMIT ${pageNumber},8
+    </select>
+
+
+    <select id="getSonComments" resultType="Item_Comments">
+        select comment_id,content,like_times,uid,uname,isDelete,root_commentID,to_commentID,update_time,location,reuname
+        from item_comments
+        where root_commentID=#{comment_id} and isDelete=0
+        order by update_time desc
+        LIMIT 0,3
+    </select>
+    
+    <select id="getAllSonComment" resultType="Item_Comments">
+        select comment_id,content,like_times,uid,uname,isDelete,root_commentID,to_commentID,update_time,location,reuname
+        from item_comments
+        where root_commentID=#{comment_id} and isDelete=0
+        order by update_time desc
+
+    </select>
+
+    <select id="getReCommentUname" resultType="java.lang.String">
+        select uname from item_comments where comment_id=#{to_commentID}
+    </select>
+
+
+    <update id="deleteComment">
+        update item_comments set isDelete=1 where comment_id=#{comment_id}
+    </update>
+
+    <select id="getUserLikeComments" resultType="UserLikeComment">
+        select * from user_likecomments where uid=#{uid} and pid=#{pid} and comment_id=#{comment_id}
+    </select>
+
+    <insert id="submitComment" useGeneratedKeys="true" keyColumn="comment_id" keyProperty="comment_id">
+        insert into item_comments values(default,#{content},#{like_times},#{uid},#{uname},#{isDelete},#{pid},#{root_commentID},#{to_commentID},#{update_time},#{location},#{reuname})
+    </insert>
+
+    <update id="updateItemCommentSize">
+        update item_details set comments_times=(select count(*) from item_comments where pid=#{pid} and isDelete=0) where pid=#{pid}
+    </update>
+
+    <insert id="supportAuthor">
+        insert into user_earnings values(#{uid},#{pid},#{amount},#{time})
+    </insert>
+
+
+</mapper>

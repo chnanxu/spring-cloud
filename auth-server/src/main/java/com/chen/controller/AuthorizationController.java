@@ -2,6 +2,7 @@ package com.chen.controller;
 
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.ResponseResult;
+import com.chen.utils.util.RedisCache;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -24,7 +25,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.util.UriUtils;
-import util.RedisCache;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
@@ -38,7 +38,7 @@ import static com.chen.utils.util.SecurityConstants.*;
 public class AuthorizationController {
 
 
-    private final RedisCache redisCache=new RedisCache();
+    private final RedisCache redisCache;
 
     private final RegisteredClientRepository registeredClientRepository;
 

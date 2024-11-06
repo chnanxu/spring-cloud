@@ -1,6 +1,7 @@
 package com.chen.authorization.SpringAuthorizationServer.Repository;
 
 import com.chen.authorization.SpringAuthorizationServer.SupplierDeferredSecurityContext;
+import com.chen.utils.util.RedisCache;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -13,21 +14,20 @@ import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
-import util.RedisCache;
 
 import java.util.function.Supplier;
 
 
+import static com.chen.utils.util.RedisConstants.DEFAULT_TIMEOUT_SECONDS;
+import static com.chen.utils.util.RedisConstants.SECURITY_CONTEXT_PREFIX_KEY;
 import static com.chen.utils.util.SecurityConstants.NONCE_HEADER_NAME;
-import static util.RedisConstants.DEFAULT_TIMEOUT_SECONDS;
-import static util.RedisConstants.SECURITY_CONTEXT_PREFIX_KEY;
 
 
 @Component
 @RequiredArgsConstructor
 public class RedisSecurityContextRepository implements SecurityContextRepository {
 
-    private final RedisCache redisCache=new RedisCache();
+    private final RedisCache redisCache;
 
     private final SecurityContextHolderStrategy securityContextHolderStrategy= SecurityContextHolder.getContextHolderStrategy();
 

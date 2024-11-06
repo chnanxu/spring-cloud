@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chen.mapper.CommunityMapper">
+
+
+    <select id="getCommunityList" >
+        select * from community
+        order by month_times desc
+        LIMIT ${pageNum},10
+    </select>
+
+    <select id="getCommunityListByType" >
+        select * from community
+        where type_id=#{type_id}
+        order by week_times desc
+        LIMIT ${pageNum},10
+    </select>
+
+    <select id="getTotalHotCommunity">
+        select * from community order by total_times desc
+        LIMIT 0,8
+    </select>
+
+    <select id="getCommunityLeftNav">
+        select * from community_left_navbar where community_id=#{community_id}
+    </select>
+
+    <select id="getCommunityModule">
+        select * from community_module where community_id=#{community_id}
+    </select>
+
+    <select id="getCommunity" resultType="Community">
+        select * from community;
+    </select>
+
+    <select id="getCommunityById">
+        select * from community where community_id=#{community_id}
+    </select>
+
+    <select id="getCommunityIdByName">
+        select community_id from community where community_name=#{community_name}
+    </select>
+
+    <select id="getCommunityDetails">
+        select * from item_details
+        where community_id=#{community_id}
+          and (create_time >= #{queryTimeParameters} and create_time &lt;=NOW())
+        order by create_time desc
+        LIMIT ${pageNum},10
+    </select>
+
+    <select id="getNews">
+        select *
+        from item_details
+        where community_id = #{community_id}
+          and tag like N'%资讯%'
+        order by create_time desc
+    </select>
+
+    <select id="getStrategy">
+        select *
+        from item_details
+        where community_id=#{community_id}
+            and tag like N'%攻略%'
+        order by create_time desc
+    </select>
+
+</mapper>

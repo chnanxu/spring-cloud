@@ -32,7 +32,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.CorsFilter;
 
-import util.JsonUtils;
 
 
 import java.io.IOException;
@@ -42,6 +41,7 @@ import java.util.Map;
 @Slf4j
 public class SecurityUtils {
 
+    private final RedisCache redisCache;
 
     private static final String CUSTOM_DEVICE_REDIRECT_URI = "/activate/redirect";
 
@@ -243,7 +243,7 @@ public class SecurityUtils {
                         .accessDeniedHandler(SecurityUtils::exceptionHandler)
                         .authenticationEntryPoint(SecurityUtils::exceptionHandler))
 
-                .logout(logout->logout.logoutSuccessHandler(new LogoutSuccessHandlerImpl()));
+                .logout(logout->logout.logoutSuccessHandler(new LogoutSuccessHandlerImpl(new RedisCache())));
 
 //        http.logout(logout->logout.invalidateHttpSession(true).logoutSuccessHandler(new LogoutSuccessHandlerImpl(new RedisCache())));
 //

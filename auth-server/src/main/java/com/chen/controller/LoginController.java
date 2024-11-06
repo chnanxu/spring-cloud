@@ -8,11 +8,13 @@ import com.chen.service.UserDetailService;
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.ResponseResult;
 import com.chen.utils.result.UserCode;
+import com.chen.utils.util.RedisCache;
+import feign.Request;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import util.RedisCache;
 
+import java.net.http.HttpRequest;
 import java.util.Objects;
 
 
@@ -23,7 +25,13 @@ import java.util.Objects;
 public class LoginController {
 
     private final UserDetailService userDetailService;
-    private final RedisCache redisCache=new RedisCache();
+    private final RedisCache redisCache;
+
+    @PostMapping("/createUserIpLocation/{ip}")
+    public ResponseResult createUserIpLocation(@PathVariable String ip, @RequestHeader HttpRequest headers){
+
+        return userDetailService.createUserIpLocation(ip,headers);
+    }
 
     @PostMapping("/reg")
     @ResponseBody

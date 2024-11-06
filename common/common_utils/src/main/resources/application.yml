@@ -1,9 +1,0 @@
-custom:
-  security:
-    ignore-uri-list: assets/**, /webjars/**, /login,/logout, /getCaptcha, /getSmsCaptcha, /error, /oauth2/consent/parameters, /favicon.ico, /qrCode/login/**
-    login-url: http://lineben.com/login
-    consent-page-uri: http://lineben.com/consent
-    device-activate-uri: http://lineben.com/activate
-    device-activated-uri: http://lineben.com/activated
-    issuer-url: http://192.168.31.221:8081
-

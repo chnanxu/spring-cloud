@@ -22,7 +22,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Objects;
 
-import static util.RedisConstants.SMS_CAPTCHA_PREFIX_KEY;
+import static com.chen.utils.util.RedisConstants.SMS_CAPTCHA_PREFIX_KEY;
 
 
 /**

@@ -16,11 +16,8 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>auth-server</module>
-		<module>gateway-server</module>
-		<module>admin-resource</module>
-		<module>normal-resource</module>
-		<module>webflux-resource</module>
-        <module>common</module>
+		<module>gateway</module>
+		<module>normal-server</module>
     </modules>
 	<url/>
 	<licenses>
@@ -151,10 +148,10 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.springframework.boot</groupId>-->
+<!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--			</plugin>-->
 		</plugins>
 	</build>
 

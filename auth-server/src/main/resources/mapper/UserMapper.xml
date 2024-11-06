@@ -27,13 +27,17 @@
 
     <insert id="registerByEmail" parameterType="User" >
         insert into users
-        values (#{uid},#{username},#{password},#{email},#{phone},#{sex},'images/default_user_img.jpg',#{sign_time},0,'',1);
+        values (#{uid},#{username},#{password},#{email},#{phone},#{uname},#{sex},'images/default_user_img.jpg',#{sign_time},0,'',1,#{location},1,0,0,0,0);
     </insert>  <!--邮箱注册-->
 
     <insert id="registerByPhone" parameterType="User" >
         insert into users
-        values (#{uid},#{username},#{password},#{email},#{phone},#{uname},#{sex},'images/default_user_img.jpg',#{sign_time},0,'',1);
+        values (#{uid},#{username},#{password},#{email},#{phone},#{uname},#{sex},'images/default_user_img.jpg',#{sign_time},0,'',1,#{location},1,0,0,0,0);
     </insert>  <!--手机号注册-->
 
+    <insert id="createUser">
+        insert into user_role
+        values (#{uid},1,'用户')
+    </insert>
 
 </mapper>

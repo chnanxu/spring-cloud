@@ -13,6 +13,8 @@ import com.chen.pojo.user.Oauth2ThirdAccount;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 
 import com.chen.pojo.user.User;
+import com.chen.utils.result.CommonCode;
+import com.chen.utils.result.ResponseResult;
 import com.chen.utils.util.SecurityConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -27,6 +29,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.net.http.HttpRequest;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -78,6 +81,13 @@ public class UserDetailServiceImpl extends ServiceImpl<Oauth2BasicUserMapper, Us
         return user;
     }
 
+
+    @Override
+    public ResponseResult<String> createUserIpLocation(String ip, HttpRequest headers){
+
+        return new ResponseResult<>(CommonCode.SUCCESS,"");
+    }
+
     @Override
     public User findByName(String username) {
 
@@ -88,11 +98,15 @@ public class UserDetailServiceImpl extends ServiceImpl<Oauth2BasicUserMapper, Us
     @Override
     public int register(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if(user.getEmail()==null){
+        if(user.getEmail()!=null){
+            userMapper.createUser(user);
             return userMapper.registerByEmail(user);
         }else{
+            userMapper.createUser(user);
             return userMapper.registerByPhone(user);
         }
+
+
     }
 
     @Override
