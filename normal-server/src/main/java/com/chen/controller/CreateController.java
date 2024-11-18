@@ -43,7 +43,7 @@ public class CreateController {
     }
 
 
-    @PostMapping(value={"/newProjectImg/{create_id}/{img_id}","/newProjectImg/{pid}/{img_id}"})  //内容图片上传接口
+    @PostMapping(value={"/newProjectImg/{create_id}/{img_id}","/updateProjectImg/{pid}/{img_id}"})  //内容图片上传接口
     public ResponseResult newProjectImg(@PathVariable(required = false) String create_id,@PathVariable(required = false) String pid,@PathVariable String img_id,@RequestParam("file") MultipartFile file){
 
         Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
@@ -75,7 +75,6 @@ public class CreateController {
 
     @PostMapping("/reUploadProject")  //更新作品
     public ResponseResult reUploadProject(@RequestBody Item_Details_Temp temp_item){
-
 
         return createService.reUploadProject(temp_item);
     }

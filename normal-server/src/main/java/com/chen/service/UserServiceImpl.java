@@ -8,8 +8,10 @@ import com.chen.pojo.page.Item_Comments;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.pojo.user.User;
 import com.chen.pojo.user.UserPersonalize;
+import com.chen.pojo.user.User_likeuser;
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.ResponseResult;
+import com.chen.utils.result.UserCode;
 import com.chen.utils.util.CustomSecurityProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,10 +39,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Oauth2UserinfoResult onClock(Oauth2UserinfoResult user) {
-
         userMapper.onClock(user.getUid());
-        user.setExp_point(user.getExp_point()+100);
+        user=userDetailService.syncUserLog();
         return user;
+
     }
 
     @Override   //关注作者实现
@@ -102,6 +104,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<Community> getUserLikeCommunity(String uid) {
         return userMapper.getUserLikeCommunityList(uid);
+    }
+
+    @Override
+    public ResponseResult<List<User_likeuser>> getUserSubscribe(Integer pageNumber) {
+
+        Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
+
+        if(user.getUid()!=null){
+            List<User_likeuser> result=userMapper.getUserSubscribe(user.getUid(),pageNumber*10-10);
+            return new ResponseResult<>(CommonCode.SUCCESS,result);
+        }else{
+            return new ResponseResult<>(UserCode.NOLOGIN);
+        }
+
     }
 
     @Override

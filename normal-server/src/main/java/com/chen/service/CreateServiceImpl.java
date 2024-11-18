@@ -41,10 +41,7 @@ public class CreateServiceImpl implements CreateService{
             id=sdf.format(System.currentTimeMillis());
             redisCache.setCacheObject(uid+"create_id:",id);
         }
-        String fileName=file.getOriginalFilename();
-
-
-        String path= customSecurityProperties.getStaticPath()+"\\images\\user_data\\"+uid+"\\project_data\\"+create_id+"\\"+id;
+        String path= customSecurityProperties.getStaticPath()+"images\\user_data\\"+uid+"\\project_data\\"+create_id+"\\"+id;
         String newFileName="cover_img.avif";
 
         return getString(create_id, file, uid, id, path, newFileName);
@@ -65,8 +62,7 @@ public class CreateServiceImpl implements CreateService{
 
         String fileName=file.getOriginalFilename();
 
-
-        String path= customSecurityProperties.getStaticPath()+"\\images\\user_data\\"+uid+"\\project_data\\"+create_id+"\\"+id;
+        String path= customSecurityProperties.getStaticPath()+"images\\user_data\\"+uid+"\\project_data\\"+create_id+"\\"+id;
 
         String newFileName="content_"+img_id+".avif";
 
@@ -76,7 +72,7 @@ public class CreateServiceImpl implements CreateService{
     }
 
     //上传本地文件方法
-    private String getString(String create_id, MultipartFile file, String uid, String id, String path, String newFileName) {
+    public String getString(String create_id, MultipartFile file, String uid, String id, String path, String newFileName) {
         File f=new File(path);
         if(!f.exists()){
             f.mkdirs();
@@ -124,7 +120,7 @@ public class CreateServiceImpl implements CreateService{
 
     }
 
-    @Override
+    @Override   //编辑已发布内容图片
     public ResponseResult<String> updateContentImg(String pid, String img_id,MultipartFile file) {
 
         Item_Details item=createMapper.findProjectByPid(pid);
@@ -133,7 +129,7 @@ public class CreateServiceImpl implements CreateService{
 
         String url=item_img_path+"content_"+img_id+".avif";
 
-        String path= customSecurityProperties.getStaticPath()+"\\"+url;
+        String path= customSecurityProperties.getStaticPath()+url;
 
         try{
             file.transferTo(new File(path));
@@ -177,7 +173,7 @@ public class CreateServiceImpl implements CreateService{
         }
         String fileName=video.getOriginalFilename();
 
-        String path= customSecurityProperties.getStaticPath()+"\\images\\user_data\\"+uid+"\\project_data\\"+create_id+"\\"+id;
+        String path= customSecurityProperties.getStaticPath()+"images\\user_data\\"+uid+"\\project_data\\"+create_id+"\\"+id;
 
         String newFileName="content_video"+fileName.substring(fileName.indexOf("."));
 
@@ -223,7 +219,7 @@ public class CreateServiceImpl implements CreateService{
         String url=createMapper.getMyProjectCoverImgSrc(pid);
 
 
-        path= customSecurityProperties.getStaticPath()+"\\"+url.substring(0,url.indexOf("cover_img"));
+        path= customSecurityProperties.getStaticPath()+url.substring(0,url.indexOf("cover_img"));
 
         String newFileName="cover_img.avif";
 

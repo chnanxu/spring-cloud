@@ -36,12 +36,10 @@ public class ResourceConfig {
         http.authorizeHttpRequests((authorize)->authorize
                 .anyRequest().permitAll()
 
-        ).formLogin(formLogin->{formLogin
-                      .loginPage("/login");
+        ).formLogin(formLogin->{
             if(UrlUtils.isAbsoluteUrl(customSecurityProperties.getLoginUrl())){
                 formLogin.successHandler(new LoginSuccessHandler(redisCache));
                 formLogin.failureHandler(new LoginFailureHandler());
-
             }
         }
         );

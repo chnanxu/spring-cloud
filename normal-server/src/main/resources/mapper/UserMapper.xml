@@ -33,7 +33,7 @@
     </insert>
 
     <update id="onClock">
-        update users set exp_point=exp_point+100 where uid=#{uid}
+        update users set exp_point=exp_point+100,clock=true where uid=#{uid}
     </update>
 
     <update id="syncUserInfo">
@@ -54,7 +54,7 @@
     </update>  <!--更新用户头像-->
 
     <update id="updateUserInfo" parameterType="User">
-        update users set uname=#{uname},sex=#{sex},email=#{email},phone=#{phone} where uid=#{uid};
+        update users set uname=#{uname},sex=#{sex} where uid=#{uid};
     </update>   <!--更新用户信息-->
 
     <insert id="registerByEmail" parameterType="User" >
@@ -69,12 +69,10 @@
 
     <insert id="addUserLikeComment" parameterType="UserLikeComment">
         insert into user_likecomments values (#{uid},#{pid},#{comment_id})
-        update item_comments set like_times=like_times+1 where comment_id=#{comment_id}
     </insert>   <!--用户点赞的评论-->
 
     <delete id="deleteUserLikeComment" parameterType="UserLikeComment">
         delete from user_likecomments where uid=#{uid} and pid=#{pid} and comment_id=#{comment_id}
-        update item_comments set like_times=like_times-1 where comment_id=#{comment_id}
     </delete>   <!--用户取消点赞的评论-->
 
     <insert id="addLikeCommunity">
@@ -98,13 +96,19 @@
     <select id="getUserLikeDetails">
         select * from user_likedetails where uid=#{uid} and pid=#{pid}
     </select> <!--获取用户喜欢列表 -->
+
+    <select id="getUserSubscribe">
+        select * from user_likeuser where uid=#{uid}
+        order by uid desc
+        LIMIT ${pageNumber},10
+    </select>
+
     <delete id="deleteUserLikeDetails">
-        delete from user_likedetails where uid=#{uid} and pid=#{pid}
-        update item_details set like_times=like_times-1 where pid=#{pid}
+        delete from user_likedetails where uid=#{uid} and pid=#{pid};
     </delete>
+
     <insert id="addUserLikeDetails">
-        insert into user_likedetails values(#{uid},#{pid},#{like_time})
-        update item_details set like_times=like_times+1 where pid=#{pid}
+        insert into user_likedetails values(#{uid},#{pid},#{like_time});
     </insert>
 
 

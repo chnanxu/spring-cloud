@@ -5,6 +5,7 @@ import com.chen.pojo.community.Community;
 import com.chen.pojo.page.Item_Comments;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.pojo.user.User;
+import com.chen.pojo.user.User_likeuser;
 import com.chen.service.UserDetailService;
 import com.chen.service.UserService;
 
@@ -59,6 +60,11 @@ public class UserController {
 
         return new ResponseResult<>(CommonCode.SUCCESS,result);
 
+    }
+
+    @GetMapping("/getUserSubscribe/{pageNumber}")
+    public ResponseResult<List<User_likeuser>> getUserSubscribe(@PathVariable Integer pageNumber){
+        return userService.getUserSubscribe(pageNumber);
     }
 
     @GetMapping("/getUserComments/{pageNum}")    //获取用户评论数据

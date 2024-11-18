@@ -46,7 +46,6 @@ public class SmsCaptchaLoginAuthenticationProvider extends CaptchaAuthentication
      */
     public SmsCaptchaLoginAuthenticationProvider(UserDetailService userDetailService, PasswordEncoder passwordEncoder, RedisCache rediscache, RedisCache redisCache) {
         super(userDetailService, passwordEncoder,rediscache);
-
         this.redisCache = redisCache;
     }
 
@@ -72,7 +71,6 @@ public class SmsCaptchaLoginAuthenticationProvider extends CaptchaAuthentication
         String grantType = request.getParameter(OAuth2ParameterNames.GRANT_TYPE);
         // 短信登录和自定义短信认证grant type会走下方认证
         // 如果是自定义密码模式则下方的认证判断只要判断下loginType即可
-        // if (Objects.equals(loginType, SecurityConstants.SMS_LOGIN_TYPE)) {}
         if (Objects.equals(loginType, SecurityConstants.SMS_LOGIN_TYPE)
                 || Objects.equals(grantType, SecurityConstants.GRANT_TYPE_SMS_CODE)) {
             // 获取存入缓存中的验证码(UsernamePasswordAuthenticationToken的principal中现在存入的是手机号)

@@ -53,10 +53,8 @@ public class PageServiceImpl implements PageService{
         pageMapper.addReadTimes(pid);
 
         Item_Details result= pageMapper.getPageDetails(pid);
-
-
         Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
-        if(user!=null){
+        if(user.getUid()!=null){
             if(userMapper.getUserPersonalizeByType_id(user.getUid(),result.getType_id())!=null){
                 userMapper.addUserPersonalizeTimes(user.getUid(),result.getType_id());
             }else{
@@ -163,9 +161,11 @@ public class PageServiceImpl implements PageService{
 
         if(pageMapper.getUserLikeComments(userLikeComment.getUid(),userLikeComment.getPid(),userLikeComment.getComment_id())!=null){
             userMapper.deleteUserLikeComment(userLikeComment.getUid(), userLikeComment.getPid(), userLikeComment.getComment_id());
+            pageMapper.substractCommentLikeTimes(userLikeComment.getComment_id());
             return "已取消点赞";
         }else{
             userMapper.addUserLikeComment(userLikeComment.getUid(), userLikeComment.getPid(), userLikeComment.getComment_id());
+            pageMapper.addCommentLikeTimes(userLikeComment.getComment_id());
             return "已点赞";
         }
 
@@ -175,9 +175,11 @@ public class PageServiceImpl implements PageService{
     public String onLikeDetails(String uid, long pid) {
         if(userMapper.getUserLikeDetails(uid,pid)!=null){
             userMapper.deleteUserLikeDetails(uid,pid);
+            pageMapper.subtractDetailLikeTimes(pid);
             return "已取消喜欢";
         }else{
             userMapper.addUserLikeDetails(uid,pid,systemTime.format(new Date(System.currentTimeMillis())));
+            pageMapper.addDetailLikeTimes(pid);
             return "已喜欢";
         }
     }

@@ -1,14 +1,11 @@
 package com.chen.mapper;
 
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.chen.pojo.community.Community;
 import com.chen.pojo.page.Item_Comments;
 import com.chen.pojo.page.ReportItem;
-import com.chen.pojo.user.User;
-import com.chen.pojo.user.UserLikeDetails;
-import com.chen.pojo.user.UserPersonalize;
-import com.chen.pojo.user.User_likeuser;
+import com.chen.pojo.user.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -16,9 +13,7 @@ import java.util.List;
 
 @Mapper
 @Repository
-public interface UserMapper extends IService<User> {
-
-    User findByName(String username);  //根据昵称查找
+public interface UserMapper extends BaseMapper<User> {
 
     User findByUid(String uid);  //根据uid查找
 
@@ -30,17 +25,17 @@ public interface UserMapper extends IService<User> {
 
     void createUserPersonalize(String uid,Integer type_id,String type_name);
 
-    int onClock(String uid);  //打卡
+    void onClock(String uid);  //打卡
 
-    int syncUserInfo(User userData);  //同步用户信息
+    void syncUserInfo(Oauth2UserinfoResult user);  //同步用户信息
 
-    int updateUserImg(String uid,String user_img);  //更新头像
+    void updateUserImg(String uid, String user_img);  //更新头像
 
-    int updateUserInfo(User userInfo);   //更新用户信息
+    void updateUserInfo(User userInfo);   //更新用户信息
 
-    int addUserLikeComment(String uid,long pid,long comment_id);  //点赞
+    void addUserLikeComment(String uid, long pid, long comment_id);  //点赞
 
-    int deleteUserLikeComment(String uid,long pid,long comment_id);  //取消点赞
+    void deleteUserLikeComment(String uid, long pid, long comment_id);  //取消点赞
 
     void addLikeCommunity(String uid, long community_id);   //关注社区
 
@@ -55,6 +50,8 @@ public interface UserMapper extends IService<User> {
     void addUserLikeDetails(String uid, long pid,String like_time); //推荐作品
 
     List<Community> getUserLikeCommunityList(String uid);   //获取用户关注社区列表
+
+    List<User_likeuser> getUserSubscribe(String uid,Integer pageNumber); //获取用户订阅列表
 
     List<Item_Comments> getUserComments(String uid,int pageNum);  //获取用户评论列表
 

@@ -25,7 +25,6 @@ public class CommonFilter implements GlobalFilter, Ordered {
     private final CustomSecurityProperties properties;
 
 
-
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain){
         ServerHttpRequest httpRequest=exchange.getRequest().mutate()

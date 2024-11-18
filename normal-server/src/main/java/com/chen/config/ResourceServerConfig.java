@@ -37,7 +37,7 @@ public class ResourceServerConfig {
         httpSecurity.cors(AbstractHttpConfigurer::disable);
 
         httpSecurity.authorizeHttpRequests((authorize)->authorize
-                .requestMatchers("/user/**","/create/**","/admin/**").authenticated()
+                .requestMatchers("/user/**","/read/**","/create/**","/admin/**").authenticated()
                 .anyRequest().permitAll())
                 .oauth2ResourceServer(resourceServer->resourceServer.jwt(
                         jwt->jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())

@@ -26,10 +26,6 @@ public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=utf-8");
 
-        System.out.println(request);
-        System.out.println(response);
-        System.out.println(authentication);
-
         ResponseResult result=new ResponseResult(CommonCode.SUCCESS,"退出登录");
         response.getWriter().write(JSON.toJSONString(result));
     }

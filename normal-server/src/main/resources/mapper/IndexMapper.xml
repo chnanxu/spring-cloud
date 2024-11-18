@@ -8,7 +8,7 @@
     </select>
 
     <select id="getTypeList" resultType="All_Type">
-        select * from all_type
+        select * from all_type 
     </select>
 
     <select id="getHotTag">

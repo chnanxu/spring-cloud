@@ -121,9 +121,8 @@ public class UserDetailServiceImpl extends ServiceImpl<Oauth2BasicUserMapper,Use
     @Override
     public Oauth2UserinfoResult syncUserLog() {
 
-        
-
         Oauth2UserinfoResult user=getLoginUserInfo();
+
         int level=user.getLevel();
         int exp_point=user.getExp_point();
 
@@ -294,6 +293,8 @@ public class UserDetailServiceImpl extends ServiceImpl<Oauth2BasicUserMapper,Use
 
         }
         user.setUp_need_exp((level+1)*1000);
+
+        userMapper.syncUserInfo(user);
 
         return user;
     }

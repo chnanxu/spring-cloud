@@ -1,6 +1,7 @@
 package com.chen.pojo.user;
 
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -22,7 +23,7 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("user")
+@TableName("users")
 public class User implements UserDetails, Serializable {
 
     @Serial
@@ -47,10 +48,10 @@ public class User implements UserDetails, Serializable {
     private boolean clock;
     private float balance;
 
-    @Transient
+    @TableField(exist = false)
     private String captcha;
 
-    @Transient
+    @TableField(exist = false)
     private Collection<CustomGrantedAuthority> authorities;
 
     @Override

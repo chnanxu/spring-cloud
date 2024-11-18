@@ -64,6 +64,22 @@
         insert into item_comments values(default,#{content},#{like_times},#{uid},#{uname},#{isDelete},#{pid},#{root_commentID},#{to_commentID},#{update_time},#{location},#{reuname})
     </insert>
 
+    <update id="addCommentLikeTimes">
+        update item_comments set like_times=like_times+1 where comment_id=#{comment_id}
+    </update>
+
+    <update id="subtractCommentLikeTimes">
+        update item_comments set like_times=like_times-1 where comment_id=#{comment_id}
+    </update>
+
+    <update id="subtractDetailLikeTimes">
+        update item_details set like_times=like_times-1 where pid=#{pid}
+    </update>
+
+    <update id="addDetailLikeTimes">
+        update item_details set like_times=like_times+1 where pid=#{pid}
+    </update>
+
     <update id="updateItemCommentSize">
         update item_details set comments_times=(select count(*) from item_comments where pid=#{pid} and isDelete=0) where pid=#{pid}
     </update>

@@ -30,10 +30,17 @@ public interface PageMapper {
     @Options(useGeneratedKeys = true,keyColumn = "comment_id")
     long submitComment(Item_Comments commentData);
 
+    void addCommentLikeTimes(long comment_id);
+
+    void substractCommentLikeTimes(long comment_id);
+
+    void subtractDetailLikeTimes(long pid);
+
+    void addDetailLikeTimes(long pid);
+
     String getReCommentUname(long to_commentID);
 
     void deleteComment(long commentId);
-
 
     void updateItemCommentSize(long pid);
 

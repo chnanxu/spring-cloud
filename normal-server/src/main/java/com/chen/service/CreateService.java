@@ -18,7 +18,7 @@ public interface CreateService {
 
     ResponseResult<List<String>> newProject(Item_Details_Temp temp_item, String uid);
 
-    ResponseResult updateContentImg(String pid,String img_id,MultipartFile file);
+    ResponseResult<String> updateContentImg(String pid,String img_id,MultipartFile file);
 
     ResponseResult reUploadProject(Item_Details_Temp temp_item);
 
