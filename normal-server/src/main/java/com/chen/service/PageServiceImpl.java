@@ -10,6 +10,7 @@ import com.chen.pojo.page.ReportItem;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.pojo.user.UserLikeComment;
 
+import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.PageCode;
 import com.chen.utils.result.ResponseResult;
 import com.chen.utils.util.RedisCache;
@@ -20,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -35,19 +37,20 @@ public class PageServiceImpl implements PageService{
 
     private final UserDetailService userDetailService;
 
-    @Override
-    public String getReCommentUname(long to_commentID) {
-        return pageMapper.getReCommentUname(to_commentID);
+    @Override  //获取回复用户名称
+    public ResponseResult<Map> getReCommentUname(long to_commentID) {
+        
+        return new ResponseResult<>(CommonCode.SUCCESS,pageMapper.getReCommentUname(to_commentID));
     }
 
-    @Override
+    @Override  //删除评论
     public void deleteComment(long commentId) {
         pageMapper.deleteComment(commentId);
     }
 
 
 
-    @Override
+    @Override  //获取页面详情
     public ResponseResult<Item_Details> getPageDetails(long pid) {
 
         pageMapper.addReadTimes(pid);
@@ -71,10 +74,11 @@ public class PageServiceImpl implements PageService{
 
     }
 
-    @Override
-    public ResponseResult<List<Item_Details>> getAuthorOther(String uid ,long pid) {
+    @Override   //获取作者其他作品
+    public ResponseResult<List<Item_Details>> getAuthorOther(long pid) {
+        Item_Details detail=pageMapper.getPageDetails(pid);
 
-        List<Item_Details> result=pageMapper.getAuthorOtherByUid(uid,pid);
+        List<Item_Details> result=pageMapper.getAuthorOtherByUid(detail.getUid(),detail.getPid());
 
         if(result==null){
             return new ResponseResult<>(PageCode.GET_FAILURE,null);
@@ -83,7 +87,7 @@ public class PageServiceImpl implements PageService{
         return new ResponseResult<>(PageCode.GET_SUCCESS,result);
     }
 
-    @Override
+    @Override    //获取页面评论
     public ResponseResult<List<Item_Comments>> getPageDetailsComments(long pid,int pageNumber) {
         List<Item_Comments> rootComments;
 
@@ -92,13 +96,14 @@ public class PageServiceImpl implements PageService{
         return new ResponseResult<>(PageCode.GET_SUCCESS,getItemComments(pid, rootComments));
     }
 
-    @Override
+    @Override   //获取全部子评论
     public List<Item_Comments> getAllSonComment(long pid,long comment_id){
 
         List<Item_Comments> rootComments= pageMapper.getAllSonComment(comment_id);
 
         return getItemComments(pid, rootComments);
     }
+    //获取子评论逻辑实现
     private List<Item_Comments> getItemComments(long pid, List<Item_Comments> rootComments) {
         Oauth2UserinfoResult userInfo=userDetailService.getLoginUserInfo();
         if(userInfo==null){
@@ -126,9 +131,8 @@ public class PageServiceImpl implements PageService{
         return rootComments;
     }
 
-    @Override
+    @Override   //提交评论
     public ResponseResult<Item_Comments> submitComment(Item_Comments commentData) {
-
 
         if(SensitiveWordHelper.contains(commentData.getContent())){
             return new ResponseResult<>(PageCode.COMMENT_SENSITIVE_WORD, null);
@@ -141,7 +145,7 @@ public class PageServiceImpl implements PageService{
 
     }
 
-    @Override
+    @Override   //提交回复评论
     public ResponseResult<Item_Comments> submitReComment(Item_Comments commentData) {
 
         if(SensitiveWordHelper.contains(commentData.getContent())){
@@ -156,7 +160,7 @@ public class PageServiceImpl implements PageService{
 
 
 
-    @Override
+    @Override   //点赞评论
     public String onLikeComment(UserLikeComment userLikeComment) {
 
         if(pageMapper.getUserLikeComments(userLikeComment.getUid(),userLikeComment.getPid(),userLikeComment.getComment_id())!=null){
@@ -171,7 +175,7 @@ public class PageServiceImpl implements PageService{
 
     }
 
-    @Override
+    @Override //点赞作品
     public String onLikeDetails(String uid, long pid) {
         if(userMapper.getUserLikeDetails(uid,pid)!=null){
             userMapper.deleteUserLikeDetails(uid,pid);
@@ -184,7 +188,7 @@ public class PageServiceImpl implements PageService{
         }
     }
 
-    @Override
+    @Override  //支持作者
     public ResponseResult<String> supportAuthor(My_Earnings item) {
 
         if(userMapper.reduceBalance(item.getAmount(),item.getUid())==1){
@@ -199,7 +203,7 @@ public class PageServiceImpl implements PageService{
 
     }
 
-    @Override
+    @Override   //举报作品
     public ResponseResult<String> reportProject(ReportItem reportItem) {
 
         if(userMapper.reportProject(reportItem)==1){

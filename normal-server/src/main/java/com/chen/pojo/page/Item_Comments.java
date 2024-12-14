@@ -23,6 +23,7 @@ public class Item_Comments {
     private String update_time;
     private String location;
     private String reuname;
+    private String reuid;
 
     @Transient
     private int sonCommentCount;

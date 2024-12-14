@@ -4,6 +4,7 @@ package com.chen.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.chen.pojo.community.Community;
 import com.chen.pojo.page.Item_Comments;
+import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.page.ReportItem;
 import com.chen.pojo.user.*;
 import org.apache.ibatis.annotations.Mapper;
@@ -52,6 +53,10 @@ public interface UserMapper extends BaseMapper<User> {
     List<Community> getUserLikeCommunityList(String uid);   //获取用户关注社区列表
 
     List<User_likeuser> getUserSubscribe(String uid,Integer pageNumber); //获取用户订阅列表
+
+    List<Item_Details> getSubscribeProject(String queryDate,String uid,Integer pageNumber);//获取订阅用户作品列表
+
+    List<Item_Details> getSubscribeProjectAll(String uid,Integer pageNumber);
 
     List<Item_Comments> getUserComments(String uid,int pageNum);  //获取用户评论列表
 

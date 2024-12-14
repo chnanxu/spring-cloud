@@ -1,10 +1,9 @@
 package com.chen.pojo.admin;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Transient;
-
 import java.util.List;
 
 @Data
@@ -17,7 +16,7 @@ public class Admin_Left_Navbar {
     private String href;
     private int root_id;
 
-    @Transient
+    @TableField(exist = false)
     private List<Admin_Left_Navbar> sonList;
 
 }

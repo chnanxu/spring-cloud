@@ -2,6 +2,7 @@ package com.chen.authorization.SpringAuthorizationServer.Repository;
 
 import com.chen.pojo.redis.RedisRegisteredClient;
 import com.chen.service.oauth2.RedisOAuth2AuthorizationService;
+import com.chen.utils.util.CustomSecurityProperties;
 import com.chen.utils.util.SecurityConstants;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.Module;
@@ -42,6 +43,8 @@ public class RedisRegisteredClientRepository implements RegisteredClientReposito
     private final PasswordEncoder passwordEncoder;
 
     private final RedisClientRepository repository;
+
+    private final CustomSecurityProperties securityProperties;
 
     private final static ObjectMapper MAPPER = new ObjectMapper();
 
@@ -228,9 +231,7 @@ public class RedisRegisteredClientRepository implements RegisteredClientReposito
                 .authorizationGrantType(AuthorizationGrantType.JWT_BEARER)
                 .authorizationGrantType(new AuthorizationGrantType(SecurityConstants.GRANT_TYPE_SMS_CODE))
                 // 授权码模式回调地址，oauth2.1已改为精准匹配，不能只设置域名，并且屏蔽了localhost，本机使用127.0.0.1访问
-
-                .redirectUri("http://lineben.com/OAuth2Redirect")
-                .redirectUri("http://lineben.com")
+                .redirectUri(securityProperties.getRedirectUri())
                 // 该客户端的授权范围，OPENID与PROFILE是IdToken的scope，获取授权时请求OPENID的scope时认证服务会返回IdToken
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
@@ -259,7 +260,7 @@ public class RedisRegisteredClientRepository implements RegisteredClientReposito
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 // 授权码模式回调地址，oauth2.1已改为精准匹配，不能只设置域名，并且屏蔽了localhost，本机使用127.0.0.1访问
-                .redirectUri("https://lineben.com/OAuth2Redirect")
+                .redirectUri(securityProperties.getRedirectUri())
                 // 该客户端的授权范围，OPENID与PROFILE是IdToken的scope，获取授权时请求OPENID的scope时认证服务会返回IdToken
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
@@ -298,8 +299,7 @@ public class RedisRegisteredClientRepository implements RegisteredClientReposito
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 // 授权码模式回调地址，oauth2.1已改为精准匹配，不能只设置域名，并且屏蔽了localhost，本机使用127.0.0.1访问
-                .redirectUri("https://lineben.com/PkceRedirect")
-                .redirectUri("https://127.0.0.1:8081/PkceRedirect")
+                .redirectUri(securityProperties.getPkceRedirectUri())
                 // 开启 PKCE 流程
                 .clientSettings(builder.requireProofKey(Boolean.TRUE).build())
                 // 指定scope

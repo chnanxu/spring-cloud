@@ -17,7 +17,6 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.function.Supplier;
 
-
 import static com.chen.utils.util.RedisConstants.DEFAULT_TIMEOUT_SECONDS;
 import static com.chen.utils.util.RedisConstants.SECURITY_CONTEXT_PREFIX_KEY;
 import static com.chen.utils.util.SecurityConstants.NONCE_HEADER_NAME;

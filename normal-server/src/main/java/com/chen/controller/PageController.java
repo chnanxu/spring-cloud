@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Map;
 
 @PreAuthorize("permitAll()")
 @RestController
@@ -35,11 +36,10 @@ public class PageController {
         return pageService.getPageDetails(pid);
     }
 
-    @GetMapping("/getAuthorOther/{uid}/{pid}") //作者其他作品接口
-    public ResponseResult<List<Item_Details>> getAuthorOther(@PathVariable String uid,@PathVariable long pid){
+    @GetMapping("/getAuthorOther/{pid}") //作者其他作品接口
+    public ResponseResult<List<Item_Details>> getAuthorOther(@PathVariable long pid){
 
-
-        return pageService.getAuthorOther(uid,pid);
+        return pageService.getAuthorOther(pid);
     }
 
     @GetMapping("/getPageDetailsComments/{pid}/{pageNumber}")  //评论数据接口
@@ -60,10 +60,10 @@ public class PageController {
 
 
     @GetMapping("/getReCommentUname/{to_commentID}")  //获取回复用户昵称
-    public ResponseResult<String> getReCommentUname(@PathVariable long to_commentID){
+    public ResponseResult<Map> getReCommentUname(@PathVariable long to_commentID){
 
-        String result= pageService.getReCommentUname(to_commentID);
-        return new ResponseResult<>(CommonCode.SUCCESS,result);
+
+        return pageService.getReCommentUname(to_commentID);
     }
 
 
@@ -73,13 +73,6 @@ public class PageController {
 
     //用户相关接口--------------------------------------------------------------------------------------------------------
 
-
-    @PreAuthorize("hasAuthority('system:write')")
-    @PostMapping("/submitCommunityPost/{gid}")
-    public ResponseResult<String> submitCommunityPost(@PathVariable String gid){
-
-        return new ResponseResult<>(CommonCode.SUCCESS,"success");
-    }
 
     @PreAuthorize("hasAuthority('system:write')")
     @PostMapping("/submitComment")    //提交评论

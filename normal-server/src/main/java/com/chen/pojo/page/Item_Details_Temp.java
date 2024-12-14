@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Accessors
 @NoArgsConstructor
 @AllArgsConstructor
 public class Item_Details_Temp extends Item_Details{
@@ -25,6 +27,7 @@ public class Item_Details_Temp extends Item_Details{
     private String cover_img;
     private String href;
     private String tag;
+    private String create_time;
     private long read_times;
     private long like_times;
     private long comments_times;
@@ -36,7 +39,5 @@ public class Item_Details_Temp extends Item_Details{
     *
     * */
     private int isOK;
-    private String create_time;
-
     private String refuse_reason;
 }

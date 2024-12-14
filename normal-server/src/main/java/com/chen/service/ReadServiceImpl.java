@@ -5,18 +5,19 @@ import com.chen.pojo.read.Book_Detail;
 import com.chen.pojo.read.User_Read_Record;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.utils.result.CommonCode;
+import com.chen.utils.result.ReadCode;
 import com.chen.utils.result.ResponseResult;
 import com.chen.utils.result.UserCode;
 import com.chen.utils.util.CustomSecurityProperties;
 import lombok.RequiredArgsConstructor;
+import nl.siegmann.epublib.domain.Book;
+import nl.siegmann.epublib.epub.EpubReader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.Array;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,10 +32,79 @@ public class ReadServiceImpl implements ReadService{
     private final UserDetailService userDetailService;
     private final CustomSecurityProperties customSecurityProperties;
 
+    private static Book_Detail saveBookToPath(String path,String folderName,String fileType,String imgType,MultipartFile file,MultipartFile img,Oauth2UserinfoResult user){
+
+        try{
+            if(fileType.toLowerCase().contains("txt")){
+                Book_Detail book=new Book_Detail();
+                SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmssSSSS");
+                String newFileName=sdf.format(System.currentTimeMillis())+fileType;
+                String imgFileName="cover_img"+imgType;
+                //图书文件
+                file.transferTo(new File(path+"\\"+newFileName));
+                //封面
+                img.transferTo(new File(path+"\\"+imgFileName));
+                String url = "images/user_data/"+user.getUid()+"/book/"+folderName+"/";
+                book.setTitle(folderName);
+                book.setAuthor(user.getUname());
+                book.setUid(user.getUid());
+                book.setSave_path(url+newFileName);
+                book.setCover_img(url+imgFileName);
+                return book;
+            } else if (fileType.toLowerCase().contains("epub")) {
+                EpubReader epubReader=new EpubReader();
+                Book epubBook=epubReader.readEpub(file.getInputStream());
+                List<String> titles=epubBook.getMetadata().getTitles();
+                System.out.println(titles);
+            }
+        }catch(IOException ioe){
+            ioe.printStackTrace();
+            return null;
+        }
+
+        return null;
+    }
+
+    @Override  //上传图书
+    public ResponseResult<String> uploadBook(MultipartFile file,MultipartFile img) {
+
+        if(file.isEmpty()){
+            return new ResponseResult<>(CommonCode.FAIL,"文件不能为空");
+        }else{
+            Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
+            //图书
+            String fileName=file.getOriginalFilename();
+            String folderName=fileName.substring(0,fileName.lastIndexOf('.'));
+            String fileType=fileName.substring(fileName.lastIndexOf('.'));
+            //封面
+            String imgName= img.getOriginalFilename();
+            String imgType=imgName.substring(imgName.lastIndexOf('.'));
+            String path = customSecurityProperties.getStaticPath()+"\\images\\user_data\\"+user.getUid()+"\\book\\"+folderName;
+
+            File f=new File(path);
+            if(!f.exists()){
+                f.mkdir();
+            }
+            Book_Detail book=saveBookToPath(path,folderName,fileType,imgType,file,img,user);
+            if(book!=null){
+                readMapper.insertBook(book);
+            }else{
+                return new ResponseResult<>(CommonCode.FAIL,"上传失败");
+            }
+
+        }
+
+        return new ResponseResult<>(CommonCode.SUCCESS,"上传成功");
+    }
+
     @Override  //获取图书详情
     public ResponseResult<Map<String,List<String>>> getBookDetail(Integer bid) {
 
         Book_Detail book=readMapper.getBookDetail(bid);
+        if(book==null){
+            return new ResponseResult<>(ReadCode.BOOK_NULL);
+        }
+
         String path=customSecurityProperties.getStaticPath()+book.getSave_path();
         Map<String,List<String>> result=new HashMap<>();
         try{
@@ -42,7 +112,7 @@ public class ReadServiceImpl implements ReadService{
             pb.environment().put("PYTHONIOENCODING","utf-8");
             Process process=pb.start();
 
-            try (BufferedReader reader=new BufferedReader(new InputStreamReader(process.getInputStream(),"utf-8"))){
+            try (BufferedReader reader=new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))){
                 String line;
                 List<String> chapterList=new ArrayList<>();
                 while ((line=reader.readLine())!=null){
@@ -120,47 +190,6 @@ public class ReadServiceImpl implements ReadService{
             }
         }
         return new ResponseResult<>(CommonCode.SUCCESS);
-    }
-    @Override
-    public ResponseResult<String> uploadBook(MultipartFile file) {
-
-        if(file.isEmpty()){
-            return new ResponseResult<>(CommonCode.FAIL,"文件不能为空");
-        }else{
-            Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
-            String path = customSecurityProperties.getStaticPath()+"\\images\\user_data\\"+user.getUid()+"\\book";
-
-            File f=new File(path);
-            if(!f.exists()){
-                f.mkdir();
-            }
-
-
-            try{
-                String fileName=file.getOriginalFilename();
-                String fileType=fileName.substring(fileName.lastIndexOf("."));
-                SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmssSSSS");
-                String newFileName=sdf.format(System.currentTimeMillis())+fileType;
-                file.transferTo(new File(path+"\\"+newFileName));
-
-                String url = "images/user_data/"+user.getUid()+"/book/"+newFileName;
-
-                Book_Detail book=new Book_Detail();
-                book.setTitle(fileName.substring(0,fileName.lastIndexOf(".")));
-                book.setAuthor(user.getUname());
-                book.setUid(user.getUid());
-                book.setSave_path(url);
-
-                readMapper.insertBook(book);
-
-            }catch(IOException ioe){
-                ioe.printStackTrace();
-                return new ResponseResult<>(CommonCode.FAIL,"");
-            }
-
-        }
-
-        return new ResponseResult<>(CommonCode.SUCCESS,"上传成功");
     }
 
     @Override

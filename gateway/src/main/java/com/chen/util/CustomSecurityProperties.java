@@ -14,6 +14,12 @@ public class CustomSecurityProperties {
     static final String PREFIX = "custom.security";
 
     /**
+     * 允许来源
+     * AllowedOriginPatterns
+     */
+    private List<String> allowedOriginUrl;
+
+    /**
      * 登录页面地址
      * 注意：不是前后端分离的项目不要写完整路径，当前项目部署的IP也不行！！！
      * 错误e.g. http://当前项目IP:当前项目端口/activated

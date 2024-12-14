@@ -18,7 +18,6 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
-        System.out.println(accessDeniedException);
         response.setContentType("application/json,charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
         ResponseResult result=new ResponseResult(UserCode.NOPERMISSION,accessDeniedException);

@@ -3,6 +3,7 @@ package com.chen.service;
 
 import com.chen.pojo.community.Community;
 import com.chen.pojo.page.Item_Comments;
+import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.pojo.user.User;
 import com.chen.pojo.user.UserPersonalize;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface UserService {
@@ -27,6 +29,8 @@ public interface UserService {
     List<Community> getUserLikeCommunity(String uid);
 
     ResponseResult<List<User_likeuser>> getUserSubscribe(Integer pageNumber);
+
+    ResponseResult<Map<String,List<Item_Details>>> getSubscribeProject(String queryDate, String uid, Integer pageNumber);
 
     List<Item_Comments> getUserComments(String uid,int pageNum);
 

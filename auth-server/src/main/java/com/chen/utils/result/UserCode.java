@@ -2,7 +2,10 @@ package com.chen.utils.result;
 
 public enum UserCode implements ResultCode {
 
-
+    SEND_EMAIL_BUSINESS(false,1,"发送请求繁忙"),
+    SEND_EMAIL_SUCCESS(true,0,"发送成功"),
+    SEND_EMAIL_FAILURE(false,1,"发送失败"),
+    EMAIL_NOT_VALUE(false,1,"验证码无效"),
     REGCHECKFAILURE(true,0,"验证码错误"),
     REGISTSUCCESS(true,0,"注册成功"),
     LOGINSUCCESS(true,0,"登录成功"),

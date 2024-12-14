@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Options;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -19,7 +20,7 @@ public interface PageMapper {
 
     Item_Details getPageDetails(long pid);
 
-    List<Item_Details> getAuthorOtherByUid(String uid,long pid);
+    List<Item_Details> getAuthorOtherByUid(String uid,String pid);
 
     List<Item_Comments> getPageDetailsComments(long pid,int pageNumber);
 
@@ -38,7 +39,7 @@ public interface PageMapper {
 
     void addDetailLikeTimes(long pid);
 
-    String getReCommentUname(long to_commentID);
+    Map getReCommentUname(long to_commentID);
 
     void deleteComment(long commentId);
 

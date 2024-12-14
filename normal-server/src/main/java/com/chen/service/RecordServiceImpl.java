@@ -35,7 +35,7 @@ public class RecordServiceImpl implements RecordService{
 
         if(keywords==null){
            Oauth2UserinfoResult user= userDetailService.getLoginUserInfo();
-            if(user==null){
+            if(user.getUid()==null){
 
             }else{
                 return recordMapper.getUserProject(user.getUid());

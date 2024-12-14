@@ -13,7 +13,7 @@ import java.util.Map;
 @Repository
 public interface Oauth2BasicUserMapper extends BaseMapper<User> {
 
-    @Select("select uid,uname,user_img from users where uid=#{uid}")
+    @Select("select uid,uname,user_img,level from users where uid=#{uid}")
     Map<String,Object> getUserBaseInfo(String uid);
 
 }

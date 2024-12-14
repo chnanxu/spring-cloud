@@ -105,10 +105,10 @@ public class CreateController {
     public ResponseResult getMyProject(@PathVariable String uid,@PathVariable String sortType,@PathVariable int pageNumber){
 
         if(sortType.equals("waitAgree") || sortType.equals("draft")){
-            return createService.getMyProjectTemp(uid,sortType,pageNumber*6-6);
+            return createService.getMyProjectTemp(uid,sortType,pageNumber*16-16);
         }
 
-        return createService.getMyProject(uid,sortType,pageNumber*6-6);
+        return createService.getMyProject(uid,sortType,pageNumber*16-16);
     }
 
     @GetMapping("/deleteMyProject/{pid}")  //删除作品

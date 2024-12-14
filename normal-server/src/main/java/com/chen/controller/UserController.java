@@ -3,6 +3,7 @@ package com.chen.controller;
 import com.chen.mapper.UserMapper;
 import com.chen.pojo.community.Community;
 import com.chen.pojo.page.Item_Comments;
+import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.pojo.user.User;
 import com.chen.pojo.user.User_likeuser;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RequiredArgsConstructor
@@ -46,7 +48,7 @@ public class UserController {
     @PostMapping("/home")   //个人信息接口
     public ResponseResult<Oauth2UserinfoResult> home(){
 
-        Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
+        Oauth2UserinfoResult user=userDetailService.syncUserLog();
 
         return new ResponseResult<>(CommonCode.SUCCESS,user);
     }
@@ -65,6 +67,11 @@ public class UserController {
     @GetMapping("/getUserSubscribe/{pageNumber}")
     public ResponseResult<List<User_likeuser>> getUserSubscribe(@PathVariable Integer pageNumber){
         return userService.getUserSubscribe(pageNumber);
+    }
+
+    @GetMapping("/getSubscribeProject/{queryDate}/{uid}/{pageNumber}")
+    public ResponseResult<Map<String,List<Item_Details>>> getSubscribeProject(@PathVariable String queryDate, @PathVariable(required = false) String uid, @PathVariable Integer pageNumber){
+        return userService.getSubscribeProject(queryDate,uid,pageNumber);
     }
 
     @GetMapping("/getUserComments/{pageNum}")    //获取用户评论数据
@@ -135,7 +142,7 @@ public class UserController {
 
         Oauth2UserinfoResult loginUser=userDetailService.getLoginUserInfo();
 
-        if(userMapper.getUserLikeUser(loginUser.getUid(),uid)!=null){
+        if(userMapper.getUserLikeUser(loginUser.getUid(), uid) != null){
             return new ResponseResult<>(CommonCode.SUCCESS,"已关注");
         }else{
             return new ResponseResult<>(CommonCode.SUCCESS,"未关注");

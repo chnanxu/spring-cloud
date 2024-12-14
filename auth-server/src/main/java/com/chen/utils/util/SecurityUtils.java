@@ -200,7 +200,6 @@ public class SecurityUtils {
                                           CustomSecurityProperties customSecurityProperties) {
         // 添加跨域过滤器
         http.addFilter(corsFilter);
-
         OAuth2AuthorizationServerConfigurer httpConfigurer = http.getConfigurer(OAuth2AuthorizationServerConfigurer.class);
 
         if (httpConfigurer != null) {

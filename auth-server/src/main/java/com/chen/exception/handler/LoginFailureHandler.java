@@ -17,6 +17,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         response.setContentType("application/json,charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
+
         ResponseResult result=new ResponseResult(UserCode.PASSWORDFAILURE,exception.getMessage());
 
         PrintWriter writer=response.getWriter();

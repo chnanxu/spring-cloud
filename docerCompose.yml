@@ -1,0 +1,47 @@
+services:
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: woaini1398
+    ports:
+      - 3306:3306
+    volumes:
+      - /home/chenxuan/Documents/workspace/data/mysql/log:/var/log/mysql
+      - /home/chenxuan/Documents/workspace/data/mysql/data:/var/lib/mysql
+      - /home/chenxuan/Documents/workspace/data/mysql/conf:/etc/mysql/conf.d
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - /home/chenxuan/Documents/workspace/data/redis/redis.conf:/etc/redis/redis.conf
+      - /home/chenxuan/Documents/workspace/data/redis/data:/var/lib/redis
+    command: redis-server /etc/redis/redis.conf
+
+  nacos:
+    image: nacos/nacos-server
+    container_name: nacos-standalone-mysql
+    ports:
+      - 8848:8848
+      - 9848:9848
+    env_file:
+      - ./nacos-standalone-mysql.env
+    restart: always
+    volumes:
+      - /home/chenxuan/Documents/workspace/data/nacos/logs:/var/log/nacos
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - 80:80
+      - 9999:9999
+    volumes:
+      - /home/chenxuan/Documents/workspace/data/nginx/logs:/var/log/nginx
+      - /home/chenxuan/Documents/workspace/data/nginx/html:/var/www/html
+      - /home/chenxuan/Documents/workspace/data/nginx/conf:/etc/nginx
+      - /home/chenxuan/Documents/workspace/data/nginx/images:/var/www/images

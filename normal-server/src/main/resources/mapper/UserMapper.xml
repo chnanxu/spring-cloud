@@ -103,6 +103,20 @@
         LIMIT ${pageNumber},10
     </select>
 
+    <select id="getSubscribeProject">
+        select * from item_details
+        where DATE(create_time) = #{queryDate} and uid=#{uid}
+        order by create_time desc
+        LIMIT ${pageNumber},10
+    </select>
+
+    <select id="getSubscribeProjectAll">
+        select * from item_details
+        where uid=#{uid}
+        order by create_time desc
+        LIMIT ${pageNumber},10
+    </select>
+
     <delete id="deleteUserLikeDetails">
         delete from user_likedetails where uid=#{uid} and pid=#{pid};
     </delete>

@@ -9,7 +9,12 @@ import com.chen.utils.result.CreateCode;
 import com.chen.utils.result.ResponseResult;
 import com.chen.utils.util.CustomSecurityProperties;
 import com.chen.utils.util.RedisCache;
+import com.github.houbb.sensitive.word.bs.SensitiveWordBs;
+import com.github.houbb.sensitive.word.bs.SensitiveWordContext;
+import com.github.houbb.sensitive.word.core.SensitiveWordHelper;
+import com.github.houbb.sensitive.word.support.resultcondition.WordResultConditions;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
@@ -30,6 +35,7 @@ public class CreateServiceImpl implements CreateService{
 
     private final CustomSecurityProperties customSecurityProperties;
 
+    private final SensitiveWordBs sensitiveWordBs;
 
     @Override     //上传封面实现
     public String newCoverImg(String create_id, MultipartFile file, String uid){
@@ -97,16 +103,10 @@ public class CreateServiceImpl implements CreateService{
             String id=redisCache.getCacheObject(uid+"create_id:");
             temp_item.setPid(id);
 
-//            SensitiveWordBs sensitiveWord= SensitiveWordBs.newInstance()
-//                    .wordResultCondition(WordResultConditions.englishWordMatch())
-//                    .init();
-//
-//
-//            if(temp_item.getDetail_type().equals("article") && sensitiveWord.contains(temp_item.getContent())){
-//                List<String> sensitiveWordList=SensitiveWordHelper.findAll(temp_item.getContent());
+//            if(temp_item.getDetail_type().equals("article") && sensitiveWordBs.contains(temp_item.getContent())){
+//                List<String> sensitiveWordList= sensitiveWordBs.findAll(temp_item.getContent());
 //                return new ResponseResult<>(CreateCode.CONTAIN_SENSITIVEWORD,sensitiveWordList);
 //            }
-
             createMapper.createNewProject(temp_item);
 
             redisCache.deleteObject(uid+"create_id:");
@@ -140,7 +140,7 @@ public class CreateServiceImpl implements CreateService{
         return new ResponseResult<>(CommonCode.SUCCESS,url);
     }
 
-    @Override
+    @Override  //重新上传作品
     public ResponseResult reUploadProject(Item_Details_Temp temp_item){
 
         Item_Details item=createMapper.findProjectByPid(temp_item.getPid());
@@ -260,12 +260,17 @@ public class CreateServiceImpl implements CreateService{
     @Override
     public ResponseResult<String> reCoverProjectByPid(String pid) {
         Item_Details item=createMapper.findProjectByPid(pid);
-
+        Item_Details_Temp temp_item=new Item_Details_Temp();
+        BeanUtils.copyProperties(item,temp_item);
         if(item==null){
             return new ResponseResult<>(CreateCode.RECOVER_FAILURE,null);
         }else{
-            createMapper.deleteMyProject(pid,item.getUid());
-            createMapper.createNewProject((Item_Details_Temp)item);
+            try{
+                createMapper.createNewProject(temp_item);
+                createMapper.deleteMyProject(pid,item.getUid());
+            }catch(Exception e){
+                e.printStackTrace();
+            }
             return new ResponseResult<>(CreateCode.RECOVER_SUCCESS);
         }
 

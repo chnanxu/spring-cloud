@@ -38,8 +38,8 @@ public class ReadController {
     }
 
     @PostMapping("/uploadBook")
-    public ResponseResult<String> uploadBook(@RequestParam("file") MultipartFile file){
-        return readService.uploadBook(file);
+    public ResponseResult<String> uploadBook(@RequestParam("file") MultipartFile file,@RequestParam("img") MultipartFile img){
+        return readService.uploadBook(file,img);
     }
 
     @GetMapping("/getBookList")

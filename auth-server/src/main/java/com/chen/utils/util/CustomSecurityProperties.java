@@ -5,6 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
 
 @Data
 @Configuration
@@ -12,6 +14,11 @@ import java.util.List;
 public class CustomSecurityProperties {
 
     static final String PREFIX = "custom.security";
+
+    /**
+     * 允许来源
+     */
+    private List<String> allowedOriginUrl;
 
     /**
      * 登录页面地址
@@ -26,6 +33,16 @@ public class CustomSecurityProperties {
      * 错误e.g. http://当前项目IP:当前项目端口/activated
      */
     private String consentPageUri;
+
+    /**
+     * 授权回调地址
+     */
+    private String redirectUri;
+
+    /**
+     * PKCE授权回调地址
+     */
+    private String pkceRedirectUri;
 
     /**
      * 授权码验证页面

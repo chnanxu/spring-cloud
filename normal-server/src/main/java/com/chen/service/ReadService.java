@@ -17,7 +17,7 @@ public interface ReadService {
 
     ResponseResult<String> updateReadRecord(Integer bid,String chapter_name,Integer start_page,Integer end_page);
 
-    ResponseResult<String> uploadBook(MultipartFile file);
+    ResponseResult<String> uploadBook(MultipartFile file,MultipartFile img);
 
     ResponseResult<List<Book_Detail>> getBookList();
 

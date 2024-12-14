@@ -9,6 +9,7 @@ import com.chen.utils.result.ResponseResult;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface PageService {
@@ -16,7 +17,7 @@ public interface PageService {
 
     ResponseResult<Item_Details> getPageDetails(long pid);
 
-    ResponseResult<List<Item_Details>> getAuthorOther(String uid,long pid);
+    ResponseResult<List<Item_Details>> getAuthorOther(long pid);
 
     ResponseResult<List<Item_Comments>> getPageDetailsComments(long pid,int pageNumber);
 
@@ -28,7 +29,7 @@ public interface PageService {
 
     ResponseResult<Item_Comments> submitReComment(Item_Comments commentData);
 
-    String getReCommentUname(long to_commentID);
+    ResponseResult<Map> getReCommentUname(long to_commentID);
 
     void deleteComment(long commentId);
 

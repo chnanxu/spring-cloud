@@ -82,13 +82,6 @@ public class AuditController {
         return new ResponseResult<>(CommonCode.SUCCESS,result);
     }
 
-    @GetMapping("/getDeletedProject/{pageNum}")     //获取已删除作品
-    public ResponseResult<List<Item_Details>> getDeletedProject(@PathVariable int pageNum){
-
-        List<Item_Details> result=adminService.getDeletedProject(pageNum);
-
-        return new ResponseResult<>(CommonCode.SUCCESS,result);
-    }
 
     @GetMapping("/getTakeoffProject/{pageNum}") //获取已下架作品
     public ResponseResult<List<Item_Details>> getTakeoffProject(@PathVariable int pageNum){

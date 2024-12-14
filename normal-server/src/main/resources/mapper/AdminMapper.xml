@@ -52,14 +52,7 @@
 
     <select id="getProjectList">
         select * from item_details
-        where isDeleted=0 and isTakeoff=0
-        order by create_time desc
-        LIMIT ${pageNum},10
-    </select>
-
-    <select id="getDeletedProjectList">
-        select * from item_details
-        where isDeleted=1
+        where  isTakeoff=0
         order by create_time desc
         LIMIT ${pageNum},10
     </select>
@@ -80,8 +73,7 @@
 
     <insert id="setProject" parameterType="Item_Details_Temp">
         insert into item_details
-        values (#{uid},#{uname},#{pid},#{community_id},#{community_name},#{type_id},#{type_name},#{detail_type},#{title},#{simple_text},#{content},#{cover_img},#{href},#{tag},#{create_time},0,0,0,0,0,0);
-
+        values (#{uid},#{uname},#{pid},#{community_id},#{community_name},#{type_id},#{type_name},#{detail_type},#{title},#{simple_text},#{content},#{cover_img},#{href},#{tag},#{create_time},#{read_times},#{like_times},#{comments_times},#{favorites},0);
     </insert>
 
     <delete id="deleteTempProject">
@@ -92,9 +84,9 @@
         update item_details_temp set isOK=-1,refuse_reason=#{refuse_reason} where uid=#{uid} and pid=#{pid}
     </update>
 
-    <update id="deleteProjectById">
-        update item_details set isDeleted=1 where pid=#{pid}
-    </update>
+    <delete id="deleteProjectById">
+        delete from item_details where pid=#{pid}
+    </delete>
 
     <update id="takeoffProjectById">
         update item_details set isTakeoff=1 where pid=#{pid}

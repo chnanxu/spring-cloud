@@ -16,6 +16,7 @@ import com.chen.pojo.user.User;
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.ResponseResult;
 import com.chen.utils.util.SecurityConstants;
+import com.github.houbb.heaven.util.lang.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.Authentication;
@@ -50,8 +51,8 @@ public class UserDetailServiceImpl extends ServiceImpl<Oauth2BasicUserMapper, Us
     private final ThirdAccountMapper thirdAccountMapper;
 
     private final PasswordEncoder passwordEncoder;
-    //返回认证用户信息对象
 
+    //返回认证用户信息对象
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user=userMapper.findByName(username);
@@ -75,8 +76,6 @@ public class UserDetailServiceImpl extends ServiceImpl<Oauth2BasicUserMapper, Us
 
         user.setAuthorities(permList);
 
-
-
         //为用户赋予权限标识
         return user;
     }
@@ -97,8 +96,10 @@ public class UserDetailServiceImpl extends ServiceImpl<Oauth2BasicUserMapper, Us
     //在数据库中，新增一位用户，且密码以加盐形式保存
     @Override
     public int register(User user){
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if(user.getEmail()!=null){
+
+        if(!StringUtil.isBlank(user.getEmail())){
             userMapper.createUser(user);
             return userMapper.registerByEmail(user);
         }else{

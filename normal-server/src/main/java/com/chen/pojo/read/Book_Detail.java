@@ -16,4 +16,5 @@ public class Book_Detail {
     private String uid;
     private String create_time;
     private String save_path;
+    private String cover_img;
 }

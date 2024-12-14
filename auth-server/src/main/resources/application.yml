@@ -7,8 +7,8 @@ spring:
         password: woaini1398
         group: my_cloud
         prefix: auth-server
-        file-extension: yml
         server-addr: ${nacos-server-addr:localhost:8848}
+        file-extension: yml
       discovery:
         username: nacos
         password: woaini1398
@@ -23,7 +23,7 @@ spring:
     password: woaini1398
     url: jdbc:mysql://localhost:3306/lineben
 
-  data:
+  data:  #redis
     redis:
       port: 6379
       host: 127.0.0.1
@@ -35,8 +35,21 @@ spring:
           max-idle: 8    #最大空闲连接数，默认8
           min-idle: 0    #最小空闲连接数，默认0
 
-
-
+  mail:
+    email: lineben_sendcode@126.com  #发送者邮箱
+    host: smtp.126.com
+    port: 587
+    username: lineben_sendcode@126.com
+    password: XJhV6RbUs9Z7PBQC
+    protocol: smtps
+    default-encoding: UTF-8
+    properties:
+      mail:
+        debug:true
+      smtp:
+        socketFactory:
+          class: javax.net.ssl.SSLSocketFactory
+#mybatis
 mybatis:
   type-aliases-package: com.chen.pojo
   mapper-locations: classpath:mapper/*.xml
@@ -48,3 +61,4 @@ mybatis-plus:
       id-type: auto
   type-aliases-package: com.chen.pojo
   mapper-locations: classpath:mapper/*.xml
+

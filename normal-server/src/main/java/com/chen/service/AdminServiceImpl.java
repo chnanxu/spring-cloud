@@ -91,10 +91,6 @@ public class AdminServiceImpl implements AdminService{
         return adminMapper.getProjectList(pageNum*10-10);
     }
 
-    @Override
-    public List<Item_Details> getDeletedProject(int pageNum) {
-        return adminMapper.getDeletedProjectList(pageNum*10-10);
-    }
 
     @Override
     public List<Item_Details> getTakeoffProject(int pageNum) {
