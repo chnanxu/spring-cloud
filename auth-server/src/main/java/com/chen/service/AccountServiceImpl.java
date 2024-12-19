@@ -6,6 +6,7 @@ import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
+import com.chen.mapper.UserMapper;
 import com.chen.service.oauth2.SendEmailService;
 import com.chen.utils.result.ResponseResult;
 import com.chen.utils.result.UserCode;
@@ -21,8 +22,9 @@ import static com.chen.utils.util.RedisConstants.EMAIL_CODE_KEY;
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService{
 
-    private final SendEmailService emailService;
+    private final UserMapper userMapper;
 
+    private final SendEmailService emailService;
 
     private final RedisCache redisCache;
 
@@ -31,6 +33,10 @@ public class AccountServiceImpl implements AccountService{
 
     @Override
     public ResponseResult sendEmailCode(String email){
+
+        if(userMapper.findByEmail(email)!=null){
+            return new ResponseResult(UserCode.USEREXIST);
+        }
 
         String emailCodeKey=EMAIL_CODE_KEY+email;
 

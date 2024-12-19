@@ -50,7 +50,7 @@ public class LoginController {
 
         if(userDetailService.findByName(user.getUsername())!=null){
             redisCache.deleteObject(EMAIL_CODE_KEY+user.getEmail());
-            return new ResponseResult(UserCode.USEREXIST);   //邮箱已注册已存在
+            return new ResponseResult(UserCode.USEREXIST);   //邮箱已注册
         }else{
 
             userDetailService.register(user);

@@ -2,8 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chen.mapper.CreateMapper">
-    <select id="findProjectByPid">
-        select * from item_details where pid=#{pid}
+
+    <select id="findTempProjectByPid">
+        select * from item_details_temp where pid=#{pid}
     </select>
 
     <insert id="createNewProject" parameterType="Item_Details_Temp">
@@ -29,13 +30,8 @@
                 where pid=#{pid}
     </update>
 
-    <delete id="deleteMyProject">
-        delete from item_details
-        where pid=#{pid} and uid=#{uid}
-    </delete>
-
     <select id="getMyProjectCount">
-        select count(*) from item_Details where uid=#{uid}
+        select count(*) from item_details where uid=#{uid}
     </select>
 
     <select id="getMyTempProjectCount">
@@ -52,25 +48,6 @@
         select * from item_details
                  where uid=#{uid} and isTakeoff=0
                  order by read_times desc
-        LIMIT ${pageNumber},16
-    </select>
-    <select id="getMyProjectByNoAgree">
-        select * from item_details_temp
-                 where uid=#{uid} and (isOK=1 or isOK=-1)
-                 order by create_time desc
-        LIMIT ${pageNumber},16
-    </select>
-    <select id="getMyProjectByDraft">
-        select * from item_details_temp
-                 where uid=#{uid} and isOK=0
-                 order by create_time desc
-        LIMIT ${pageNumber},16
-    </select>
-
-    <select id="getMyProjectTakeoff">
-        select * from item_details
-        where uid=#{uid} and isTakeoff=1
-        order by create_time desc
         LIMIT ${pageNumber},16
     </select>
 

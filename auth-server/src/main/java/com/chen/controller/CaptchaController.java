@@ -23,7 +23,7 @@ import java.util.Map;
 import static com.chen.utils.util.RedisConstants.*;
 
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
  //验证码接口
 public class CaptchaController {
@@ -62,7 +62,8 @@ public class CaptchaController {
         return new ResponseResult(CommonCode.SUCCESS,result);
     }
 
-    @PostMapping("/sendEmailCode/{email}")   //邮箱验证码
+    @ResponseBody
+    @GetMapping("/sendEmailCode/{email}")   //邮箱验证码
     public ResponseResult checkSmsCaptcha(@PathVariable String email){
         return accountService.sendEmailCode(email);
     }

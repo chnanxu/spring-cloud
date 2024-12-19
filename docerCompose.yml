@@ -39,6 +39,7 @@ services:
     container_name: nginx
     ports:
       - 80:80
+      - 443:443
       - 9999:9999
     volumes:
       - /home/chenxuan/Documents/workspace/data/nginx/logs:/var/log/nginx

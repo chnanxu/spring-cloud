@@ -1,6 +1,7 @@
 package com.chen.service;
 
 import com.chen.mapper.CreateMapper;
+import com.chen.mapper.create.CreateTempMapper;
 import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.page.Item_Details_Temp;
 import com.chen.pojo.user.Oauth2UserinfoResult;
@@ -22,12 +23,15 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class CreateServiceImpl implements CreateService{
 
     private final CreateMapper createMapper;
+
+    private final CreateTempMapper createTempMapper;
 
     private final UserDetailService userDetailService;
 
@@ -47,7 +51,7 @@ public class CreateServiceImpl implements CreateService{
             id=sdf.format(System.currentTimeMillis());
             redisCache.setCacheObject(uid+"create_id:",id);
         }
-        String path= customSecurityProperties.getStaticPath()+"images\\user_data\\"+uid+"\\project_data\\"+create_id+"\\"+id;
+        String path= customSecurityProperties.getStaticPath()+"images/user_data/"+uid+"/project_data/"+create_id+"/"+id;
         String newFileName="cover_img.avif";
 
         return getString(create_id, file, uid, id, path, newFileName);
@@ -68,7 +72,7 @@ public class CreateServiceImpl implements CreateService{
 
         String fileName=file.getOriginalFilename();
 
-        String path= customSecurityProperties.getStaticPath()+"images\\user_data\\"+uid+"\\project_data\\"+create_id+"\\"+id;
+        String path= customSecurityProperties.getStaticPath()+"images/user_data/"+uid+"/project_data/"+create_id+"/"+id;
 
         String newFileName="content_"+img_id+".avif";
 
@@ -87,7 +91,7 @@ public class CreateServiceImpl implements CreateService{
         String url="images/user_data/"+uid+"/project_data/"+create_id+"/"+id+"/"+newFileName;
 
         try {
-            file.transferTo(new File(path+"\\"+newFileName));
+            file.transferTo(new File(path+"/"+newFileName));
         } catch (IOException e) {
             e.printStackTrace();
             return "异常情况";
@@ -123,7 +127,7 @@ public class CreateServiceImpl implements CreateService{
     @Override   //编辑已发布内容图片
     public ResponseResult<String> updateContentImg(String pid, String img_id,MultipartFile file) {
 
-        Item_Details item=createMapper.findProjectByPid(pid);
+        Item_Details item=createMapper.selectById(pid);
 
         String item_img_path=item.getCover_img().substring(0,item.getCover_img().indexOf("cover_img"));
 
@@ -143,18 +147,18 @@ public class CreateServiceImpl implements CreateService{
     @Override  //重新上传作品
     public ResponseResult reUploadProject(Item_Details_Temp temp_item){
 
-        Item_Details item=createMapper.findProjectByPid(temp_item.getPid());
+        Item_Details item=createMapper.selectById(temp_item.getPid());
 
         if(item==null){
             if(temp_item.getIsOK()==1){
-                createMapper.updateTempProject(temp_item);
+                createTempMapper.updateById(temp_item);
             }else{
                 createMapper.createNewProject(temp_item);
             }
 
         }else{
             temp_item.setIsOK(1);
-            createMapper.deleteMyProject(item.getPid(),item.getUid());
+            createMapper.deleteById(item.getPid());
             createMapper.createNewProject(temp_item);
         }
 
@@ -173,7 +177,7 @@ public class CreateServiceImpl implements CreateService{
         }
         String fileName=video.getOriginalFilename();
 
-        String path= customSecurityProperties.getStaticPath()+"images\\user_data\\"+uid+"\\project_data\\"+create_id+"\\"+id;
+        String path= customSecurityProperties.getStaticPath()+"images/user_data/"+uid+"/project_data/"+create_id+"/"+id;
 
         String newFileName="content_video"+fileName.substring(fileName.indexOf("."));
 
@@ -196,7 +200,7 @@ public class CreateServiceImpl implements CreateService{
         } else if (sortType.equals("hot")) {
             return new ResponseResult<>(CommonCode.SUCCESS,createMapper.getMyProjectByHot(uid,pageNumber));
         }else if(sortType.equals("takeoff")){
-            return new ResponseResult<>(CommonCode.SUCCESS,createMapper.getMyProjectTakeoff(uid,pageNumber));
+            return new ResponseResult<>(CommonCode.SUCCESS,createTempMapper.getMyProjectTakeoff(uid,pageNumber));
         }
         return null;
     }
@@ -204,9 +208,9 @@ public class CreateServiceImpl implements CreateService{
     @Override
     public ResponseResult<List<Item_Details_Temp>> getMyProjectTemp(String uid,String sortType,int pageNumber){
         if(sortType.equals("waitAgree")){
-            return new ResponseResult<>(CommonCode.SUCCESS,createMapper.getMyProjectByNoAgree(uid,pageNumber)) ;
+            return new ResponseResult<>(CommonCode.SUCCESS,createTempMapper.getMyProjectByNoAgree(uid,pageNumber)) ;
         }else if(sortType.equals("draft")){
-            return new ResponseResult<>(CommonCode.SUCCESS,createMapper.getMyProjectByDraft(uid,pageNumber));
+            return new ResponseResult<>(CommonCode.SUCCESS,createTempMapper.getMyProjectByDraft(uid,pageNumber));
         }
         return null;
     }
@@ -238,14 +242,16 @@ public class CreateServiceImpl implements CreateService{
 
         Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
 
-        if(createMapper.findProjectByPid(pid)==null){
-            return new ResponseResult(CommonCode.SUCCESS,"作品不存在");
+        if(Objects.isNull(createMapper.selectById(pid))){
+            if(Objects.isNull(createTempMapper.selectById(pid))){
+                return new ResponseResult(CommonCode.SUCCESS,"作品不存在");
+            }else{
+                createTempMapper.deleteById(pid);
+            }
         }else{
-            createMapper.deleteMyProject(pid,user.getUid());
-            return new ResponseResult(CommonCode.SUCCESS,"删除成功");
+            createMapper.deleteById(pid);
         }
-
-
+        return new ResponseResult(CommonCode.SUCCESS,"删除成功");
     }
 
     @Override
@@ -259,7 +265,7 @@ public class CreateServiceImpl implements CreateService{
 
     @Override
     public ResponseResult<String> reCoverProjectByPid(String pid) {
-        Item_Details item=createMapper.findProjectByPid(pid);
+        Item_Details item=createMapper.selectById(pid);
         Item_Details_Temp temp_item=new Item_Details_Temp();
         BeanUtils.copyProperties(item,temp_item);
         if(item==null){
@@ -267,7 +273,7 @@ public class CreateServiceImpl implements CreateService{
         }else{
             try{
                 createMapper.createNewProject(temp_item);
-                createMapper.deleteMyProject(pid,item.getUid());
+                createMapper.deleteById(pid);
             }catch(Exception e){
                 e.printStackTrace();
             }

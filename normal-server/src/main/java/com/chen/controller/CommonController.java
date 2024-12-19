@@ -4,9 +4,7 @@ import com.chen.service.CommonService;
 import com.chen.utils.result.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,4 +18,11 @@ public class CommonController {
         return commonService.getUserBaseInfo(uid);
     }
 
+//    @RequestMapping(value = {"/ws/plugins/get","/ws/plugins/post"})
+//    public ResponseResult getPlugins(@RequestParam("token") String token){
+//
+//        System.out.println(token);
+//
+//        return ResponseResult.success();
+//    }
 }

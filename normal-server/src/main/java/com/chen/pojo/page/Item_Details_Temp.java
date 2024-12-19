@@ -1,6 +1,8 @@
 package com.chen.pojo.page;
 
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,10 +14,14 @@ import lombok.experimental.Accessors;
 @Accessors
 @NoArgsConstructor
 @AllArgsConstructor
+@TableName("item_details_temp")
 public class Item_Details_Temp extends Item_Details{
     private String uid;
     private String uname;
+
+    @TableId
     private String pid;
+
     private long community_id;
     private String community_name;
     private int type_id;

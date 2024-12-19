@@ -87,6 +87,13 @@ public class AuthorizationConfig {
     }
 
 
+    @Bean
+    public AuthorizationServerSettings authorizationServerSettings(){
+        return AuthorizationServerSettings.builder()
+                .issuer(customSecurityProperties.getIssuerUrl())
+                .build();
+    }
+
     /**
      * 自定义Jwt ，将权限信息放入jwt中
      * @return

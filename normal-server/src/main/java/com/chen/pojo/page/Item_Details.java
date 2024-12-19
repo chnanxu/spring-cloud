@@ -1,5 +1,8 @@
 package com.chen.pojo.page;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,10 +12,14 @@ import org.springframework.data.annotation.Transient;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@TableName("item_details")
 public class Item_Details {
     private String uid;
     private String uname;
+
+    @TableId
     private String pid;
+
     private long community_id;
     private String community_name;
     private int type_id;
@@ -30,6 +37,6 @@ public class Item_Details {
     private long comments_times;
     private long favorites;
 
-    @Transient
+    @TableField(exist = false)
     private int isOK;
 }
