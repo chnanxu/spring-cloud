@@ -15,6 +15,8 @@ import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.pojo.user.User;
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.ResponseResult;
+import com.chen.utils.result.UserCode;
+import com.chen.utils.util.RedisCache;
 import com.chen.utils.util.SecurityConstants;
 import com.github.houbb.heaven.util.lang.StringUtil;
 import lombok.RequiredArgsConstructor;
@@ -31,12 +33,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.net.http.HttpRequest;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.chen.utils.util.RedisConstants.EMAIL_CODE_KEY;
 import static com.chen.utils.util.SecurityConstants.OAUTH_LOGIN_TYPE;
 import static com.chen.utils.util.SecurityConstants.TOKEN_UNIQUE_ID;
 
@@ -51,6 +51,8 @@ public class UserDetailServiceImpl extends ServiceImpl<Oauth2BasicUserMapper, Us
     private final ThirdAccountMapper thirdAccountMapper;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final RedisCache redisCache;
 
     //返回认证用户信息对象
     @Override
@@ -87,25 +89,32 @@ public class UserDetailServiceImpl extends ServiceImpl<Oauth2BasicUserMapper, Us
         return new ResponseResult<>(CommonCode.SUCCESS,"");
     }
 
-    @Override
-    public User findByName(String username) {
-
-        return userMapper.findByName(username);
-    }
-
     //在数据库中，新增一位用户，且密码以加盐形式保存
     @Override
-    public int register(User user){
+    public ResponseResult<String> register(User user){
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        String sysCheck=redisCache.getCacheObject(EMAIL_CODE_KEY+user.getEmail());
+        String regCheck=user.getCaptcha();
 
-        if(!StringUtil.isBlank(user.getEmail())){
-            userMapper.createUser(user);
-            return userMapper.registerByEmail(user);
-        }else{
-            userMapper.createUser(user);
-            return userMapper.registerByPhone(user);
+        if(StringUtil.isBlank(sysCheck)){
+            return new ResponseResult<>(UserCode.EMAIL_NOT_VALUE);  //验证码无效
         }
+
+        if(!Objects.equals(sysCheck,regCheck)){
+            return new ResponseResult<>(UserCode.REGCHECKFAILURE);  //验证码错误
+        }
+
+        if(userMapper.findByName(user.getUsername())!=null){
+            redisCache.deleteObject(EMAIL_CODE_KEY+user.getEmail());
+            return new ResponseResult<>(UserCode.USEREXIST);   //邮箱已注册
+        }else{
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userMapper.createUser(user);  //创建用户角色信息
+            userMapper.insert(user);  //创建用户账号信息
+            redisCache.deleteObject(EMAIL_CODE_KEY+user.getEmail());
+            return new ResponseResult<>(UserCode.REGISTSUCCESS);  //注册成功
+        }
+
 
 
     }

@@ -1,4 +1,4 @@
-package com.chen.mapper;
+package com.chen.mapper.user;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.chen.pojo.user.User;

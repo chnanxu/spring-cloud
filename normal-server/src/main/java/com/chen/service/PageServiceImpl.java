@@ -2,7 +2,7 @@ package com.chen.service;
 
 
 import com.chen.mapper.PageMapper;
-import com.chen.mapper.UserMapper;
+import com.chen.mapper.user.UserMapper;
 import com.chen.pojo.page.Item_Comments;
 import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.page.My_Earnings;
@@ -165,7 +165,7 @@ public class PageServiceImpl implements PageService{
 
         if(pageMapper.getUserLikeComments(userLikeComment.getUid(),userLikeComment.getPid(),userLikeComment.getComment_id())!=null){
             userMapper.deleteUserLikeComment(userLikeComment.getUid(), userLikeComment.getPid(), userLikeComment.getComment_id());
-            pageMapper.substractCommentLikeTimes(userLikeComment.getComment_id());
+            pageMapper.subtractCommentLikeTimes(userLikeComment.getComment_id());
             return "已取消点赞";
         }else{
             userMapper.addUserLikeComment(userLikeComment.getUid(), userLikeComment.getPid(), userLikeComment.getComment_id());

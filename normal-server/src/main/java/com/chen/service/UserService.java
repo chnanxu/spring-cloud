@@ -24,7 +24,7 @@ public interface UserService {
 
     String guanzhuCommunity(String uid,long gid);
 
-    String updateHeadImg(MultipartFile file,String uid);
+    ResponseResult<String> updateHeadImg(MultipartFile file,String uid);
 
     List<Community> getUserLikeCommunity(String uid);
 

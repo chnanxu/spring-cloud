@@ -1,6 +1,6 @@
-package com.chen.controller;
+package com.chen.controller.user;
 
-import com.chen.mapper.UserMapper;
+import com.chen.mapper.user.UserMapper;
 import com.chen.pojo.community.Community;
 import com.chen.pojo.page.Item_Comments;
 import com.chen.pojo.page.Item_Details;
@@ -105,9 +105,7 @@ public class UserController {
 
         Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
 
-        String message= userService.updateHeadImg(file,user.getUid());
-
-        return new ResponseResult<>(CommonCode.SUCCESS,message);
+        return userService.updateHeadImg(file,user.getUid());
 
     }
 

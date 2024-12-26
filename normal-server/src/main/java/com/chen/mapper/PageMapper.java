@@ -29,11 +29,11 @@ public interface PageMapper {
     UserLikeComment getUserLikeComments(String uid,long pid,long comment_id);
 
     @Options(useGeneratedKeys = true,keyColumn = "comment_id")
-    long submitComment(Item_Comments commentData);
+    void submitComment(Item_Comments commentData);
 
     void addCommentLikeTimes(long comment_id);
 
-    void substractCommentLikeTimes(long comment_id);
+    void subtractCommentLikeTimes(long comment_id);
 
     void subtractDetailLikeTimes(long pid);
 

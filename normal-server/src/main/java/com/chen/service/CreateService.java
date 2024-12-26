@@ -18,7 +18,7 @@ public interface CreateService {
 
     ResponseResult<List<String>> newProject(Item_Details_Temp temp_item, String uid);
 
-    ResponseResult<String> updateContentImg(String pid,String img_id,MultipartFile file);
+    ResponseResult<String> updateContentImg(Long pid,String img_id,MultipartFile file);
 
     ResponseResult reUploadProject(Item_Details_Temp temp_item);
 
@@ -30,13 +30,13 @@ public interface CreateService {
 
     ResponseResult<List<Item_Details_Temp>> getMyProjectTemp(String uid,String sortType,int pageNumber);
 
-    String updateCoverImg(String pid,MultipartFile file);
+    String updateCoverImg(Long pid,MultipartFile file);
 
-    ResponseResult<String> deleteMyProject(String pid);
+    ResponseResult<String> deleteMyProject(Long pid);
 
-    ResponseResult<String> takeoffProject(String pid);
+    ResponseResult<String> takeoffProject(Long pid);
 
-    ResponseResult<String> reCoverProjectByPid(String pid);
+    ResponseResult<String> reCoverProjectByPid(Long pid);
 
 
 }

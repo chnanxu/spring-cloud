@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.chen.mapper.RecordMapper">
+<mapper namespace="com.chen.mapper.user.RecordMapper">
     <select id="getUserInfo">
         select email,uname,sex,user_img,location,level from users where uid=#{uid}
     </select>
 
     <select id="getUserProject">
-        select * from item_details where uid=#{uid} and isTakeoff=0
+        select * from item_details where uid=#{uid}
         order by create_time desc
         LIMIT 0,10
     </select>

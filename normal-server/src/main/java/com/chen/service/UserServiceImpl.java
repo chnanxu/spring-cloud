@@ -3,26 +3,22 @@ package com.chen.service;
 
 import com.alibaba.nacos.shaded.com.google.common.collect.Maps;
 import com.chen.mapper.PageMapper;
-import com.chen.mapper.UserMapper;
+import com.chen.mapper.user.UserMapper;
 import com.chen.pojo.community.Community;
 import com.chen.pojo.page.Item_Comments;
 import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.user.Oauth2UserinfoResult;
-import com.chen.pojo.user.User;
-import com.chen.pojo.user.UserPersonalize;
 import com.chen.pojo.user.User_likeuser;
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.ResponseResult;
 import com.chen.utils.result.UserCode;
 import com.chen.utils.util.CustomSecurityProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -76,33 +72,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override    //更新头像实现
-    public String updateHeadImg(MultipartFile file,String uid){
-
-        String fileName=file.getOriginalFilename();
-
-        String path=customSecurityProperties.getStaticPath()+"\\images\\user_data\\"+uid;
-
-        String newFileName="user_headImg"+fileName.substring(fileName.lastIndexOf("."));
-
-        File f=new File(path);
-
-        if(!f.exists()){
-            f.mkdirs();
-        }
-
-        String url="images/user_data/"+uid+"/"+newFileName;
-
-        userMapper.updateUserImg(uid,url);
+    public ResponseResult<String> updateHeadImg(MultipartFile file,String uid){
 
         try {
-            file.transferTo(new File(path+"\\"+newFileName));
+            String fileName=file.getOriginalFilename();
+            String path=customSecurityProperties.getStaticPath()+"/images/user_data/"+uid;
+            assert fileName != null;
+            String newFileName="user_headImg"+fileName.substring(fileName.lastIndexOf("."));
+
+            File f=new File(path);
+
+            if(!f.exists()){
+                f.mkdirs();
+            }
+
+            String url="images/user_data/"+uid+"/"+newFileName;
+
+            userMapper.updateUserImg(uid,url);
+            file.transferTo(new File(path+"/"+newFileName));
+            return new ResponseResult<>(UserCode.UPDATE_SUCCESS,url);
         } catch (IOException e) {
             e.printStackTrace();
 
-            return "异常情况";
+            return new ResponseResult<>(CommonCode.FAIL,"操作异常");
         }
 
-        return url;
+
     }
 
     @Override

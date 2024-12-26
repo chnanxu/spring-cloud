@@ -1,4 +1,4 @@
-package com.chen.service;
+package com.chen.service.admin;
 
 
 import com.chen.pojo.admin.Admin_Left_Navbar;
@@ -18,18 +18,12 @@ public interface AdminService {
 
     ResponseResult<List<Admin_Left_Navbar>> getAdminLeftNavbar();
 
-    String refuseProject(String uid,long pid,String refuse_reason);
-    String agreeProject(String uid,long pid);
 
-    int takeoffProject(long pid);
-    List<Item_Details_Temp> getTempProject(int pageNum);
-    List<Item_Details> getProject(int pageNum);
-
-    List<Item_Details> getTakeoffProject(int pageNum);
 
     String createCommunity(Community community);
 
     String updateCommunityCoverImg(String community_id,MultipartFile file);
+
     Community updateCommunity(Community community);
 
     ResponseResult<UserRole> updateUserRole(UserRole userRole);

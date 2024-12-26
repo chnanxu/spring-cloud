@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.chen.mapper.UserMapper">
+<mapper namespace="com.chen.mapper.user.UserMapper">
 
     <select id="findByName" resultType="User">
         select * from users where username=#{username} or phone=#{username} or email=#{username}
@@ -173,7 +173,7 @@
     </update>
 
     <insert id="reportProject">
-        insert into report_item values(#{pid},#{uid},#{uname},#{create_time},#{report_reason},#{report_content})
+        insert into report_item values(default,#{pid},#{uid},#{uname},#{create_time},#{report_reason},#{report_content})
     </insert>
 
 </mapper>

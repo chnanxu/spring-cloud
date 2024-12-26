@@ -3,18 +3,17 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chen.mapper.PageMapper">
 
-
     <update id="addReadTimes">
         update item_details set read_times=read_times+1 where pid=#{pid}
     </update>
 
     <select id="getPageDetails" resultType="Item_Details">
-        select * from item_details where pid=${pid} and isTakeoff=0
+        select * from item_details where pid=${pid}
     </select>
 
     <select id="getAuthorOtherByUid">
         select * from item_details
-                 where uid=#{uid} and pid&lt;>#{pid} and isTakeoff=0
+                 where uid=#{uid} and pid&lt;>#{pid}
         order by read_times
         LIMIT 0,5
     </select>
@@ -58,7 +57,7 @@
     </select>
 
     <insert id="submitComment" useGeneratedKeys="true" keyColumn="comment_id" keyProperty="comment_id">
-        insert into item_comments values(default,#{content},#{like_times},#{uid},#{uname},#{isDelete},#{pid},#{root_commentID},#{to_commentID},#{update_time},#{location},#{reuname})
+        insert into item_comments values(default,#{content},#{like_times},#{uid},#{uname},#{isDelete},#{pid},#{root_commentID},#{to_commentID},#{update_time},#{location},#{reuname},#{reuid})
     </insert>
 
     <update id="addCommentLikeTimes">

@@ -1,14 +1,14 @@
 package com.chen.controller.admin;
 
 
-import com.chen.mapper.AdminMapper;
+import com.chen.mapper.admin.AdminMapper;
 import com.chen.pojo.admin.Admin_Left_Navbar;
 import com.chen.pojo.community.Community;
 import com.chen.pojo.page.ReportItem;
 import com.chen.pojo.permission.Role;
 import com.chen.pojo.user.User;
 import com.chen.pojo.user.UserRole;
-import com.chen.service.AdminService;
+import com.chen.service.admin.AdminService;
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.ResponseResult;
 import lombok.RequiredArgsConstructor;

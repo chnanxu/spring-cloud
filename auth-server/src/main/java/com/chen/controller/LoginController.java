@@ -26,7 +26,7 @@ import static com.chen.utils.util.RedisConstants.EMAIL_CODE_KEY;
 public class LoginController {
 
     private final UserDetailService userDetailService;
-    private final RedisCache redisCache;
+
 
     @PostMapping("/createUserIpLocation/{ip}")
     public ResponseResult createUserIpLocation(@PathVariable String ip, @RequestHeader HttpRequest headers){
@@ -37,26 +37,9 @@ public class LoginController {
     @PostMapping("/reg")
     @ResponseBody
     public ResponseResult register(@RequestBody User user){
-        String sysCheck=redisCache.getCacheObject(EMAIL_CODE_KEY+user.getEmail());
 
-        if(StringUtil.isBlank(sysCheck)){
-            return new ResponseResult(UserCode.EMAIL_NOT_VALUE);  //验证码无效
-        }
-        String regCheck=user.getCaptcha();
-        System.out.println(regCheck);
-        if(!Objects.equals(sysCheck,regCheck)){
-            return new ResponseResult(UserCode.REGCHECKFAILURE);  //验证码错误
-        }
+       return userDetailService.register(user);
 
-        if(userDetailService.findByName(user.getUsername())!=null){
-            redisCache.deleteObject(EMAIL_CODE_KEY+user.getEmail());
-            return new ResponseResult(UserCode.USEREXIST);   //邮箱已注册
-        }else{
-
-            userDetailService.register(user);
-            redisCache.deleteObject(EMAIL_CODE_KEY+user.getEmail());
-            return new ResponseResult(UserCode.REGISTSUCCESS);  //注册成功
-        }
     }
 
     @RequestMapping("/syncUserLog")

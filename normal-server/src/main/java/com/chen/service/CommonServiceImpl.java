@@ -1,6 +1,6 @@
 package com.chen.service;
 
-import com.chen.mapper.Oauth2BasicUserMapper;
+import com.chen.mapper.user.Oauth2BasicUserMapper;
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.ResponseResult;
 import lombok.RequiredArgsConstructor;

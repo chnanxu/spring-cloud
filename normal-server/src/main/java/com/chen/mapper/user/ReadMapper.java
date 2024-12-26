@@ -1,4 +1,4 @@
-package com.chen.mapper;
+package com.chen.mapper.user;
 
 import com.chen.pojo.read.Book_Detail;
 import com.chen.pojo.read.User_Read_Record;

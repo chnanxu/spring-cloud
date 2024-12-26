@@ -1,6 +1,6 @@
 package com.chen.service;
 
-import com.chen.mapper.CreateMapper;
+import com.chen.mapper.user.CreateMapper;
 import com.chen.mapper.create.CreateTempMapper;
 import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.page.Item_Details_Temp;
@@ -11,9 +11,6 @@ import com.chen.utils.result.ResponseResult;
 import com.chen.utils.util.CustomSecurityProperties;
 import com.chen.utils.util.RedisCache;
 import com.github.houbb.sensitive.word.bs.SensitiveWordBs;
-import com.github.houbb.sensitive.word.bs.SensitiveWordContext;
-import com.github.houbb.sensitive.word.core.SensitiveWordHelper;
-import com.github.houbb.sensitive.word.support.resultcondition.WordResultConditions;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -22,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -111,7 +107,7 @@ public class CreateServiceImpl implements CreateService{
 //                List<String> sensitiveWordList= sensitiveWordBs.findAll(temp_item.getContent());
 //                return new ResponseResult<>(CreateCode.CONTAIN_SENSITIVEWORD,sensitiveWordList);
 //            }
-            createMapper.createNewProject(temp_item);
+            createTempMapper.insert(temp_item);
 
             redisCache.deleteObject(uid+"create_id:");
 
@@ -125,7 +121,7 @@ public class CreateServiceImpl implements CreateService{
     }
 
     @Override   //编辑已发布内容图片
-    public ResponseResult<String> updateContentImg(String pid, String img_id,MultipartFile file) {
+    public ResponseResult<String> updateContentImg(Long pid, String img_id,MultipartFile file) {
 
         Item_Details item=createMapper.selectById(pid);
 
@@ -153,13 +149,13 @@ public class CreateServiceImpl implements CreateService{
             if(temp_item.getIsOK()==1){
                 createTempMapper.updateById(temp_item);
             }else{
-                createMapper.createNewProject(temp_item);
+                createTempMapper.insert(temp_item);
             }
 
         }else{
             temp_item.setIsOK(1);
             createMapper.deleteById(item.getPid());
-            createMapper.createNewProject(temp_item);
+            createTempMapper.insert(temp_item);
         }
 
         return new ResponseResult(CreateCode.CREATE_SUCCESS,temp_item);
@@ -216,7 +212,7 @@ public class CreateServiceImpl implements CreateService{
     }
 
     @Override
-    public String updateCoverImg(String pid,MultipartFile file){
+    public String updateCoverImg(Long pid,MultipartFile file){
 
         Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
         String path="";
@@ -238,7 +234,7 @@ public class CreateServiceImpl implements CreateService{
     }
 
     @Override
-    public ResponseResult deleteMyProject(String pid) {
+    public ResponseResult deleteMyProject(Long pid) {
 
         Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
 
@@ -255,30 +251,32 @@ public class CreateServiceImpl implements CreateService{
     }
 
     @Override
-    public ResponseResult<String> takeoffProject(String pid){
-        if(createMapper.takeoffProject(pid)==0){
-            return new ResponseResult<>(CommonCode.SUCCESS,"作品不存在");
-        }else{
-            return new ResponseResult<>(CommonCode.SUCCESS,"下架成功");
-        }
+    public ResponseResult<String> takeoffProject(Long pid){
+
+            try {
+                Item_Details item=createMapper.selectById(pid);
+                createMapper.deleteById(pid);
+                Item_Details_Temp temp_item=new Item_Details_Temp();
+                BeanUtils.copyProperties(item,temp_item);
+                temp_item.setIsOK(-2);
+                createTempMapper.insert(temp_item);
+                return new ResponseResult<>(CommonCode.SUCCESS,"下架成功");
+            }catch (Exception e){
+                return new ResponseResult<>(CommonCode.SUCCESS,"作品不存在");
+            }
     }
 
     @Override
-    public ResponseResult<String> reCoverProjectByPid(String pid) {
-        Item_Details item=createMapper.selectById(pid);
-        Item_Details_Temp temp_item=new Item_Details_Temp();
-        BeanUtils.copyProperties(item,temp_item);
-        if(item==null){
-            return new ResponseResult<>(CreateCode.RECOVER_FAILURE,null);
-        }else{
+    public ResponseResult reCoverProjectByPid(Long pid) {
+
             try{
-                createMapper.createNewProject(temp_item);
+                createTempMapper.recoverProject(pid);
                 createMapper.deleteById(pid);
+                return new ResponseResult<>(CreateCode.RECOVER_SUCCESS);
             }catch(Exception e){
                 e.printStackTrace();
+                return new ResponseResult<>(CreateCode.RECOVER_FAILURE,null);
             }
-            return new ResponseResult<>(CreateCode.RECOVER_SUCCESS);
-        }
 
     }
 }

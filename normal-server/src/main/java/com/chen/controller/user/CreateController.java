@@ -1,6 +1,5 @@
-package com.chen.controller;
+package com.chen.controller.user;
 
-import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.page.Item_Details_Temp;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.service.CreateService;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -44,7 +43,7 @@ public class CreateController {
 
 
     @PostMapping(value={"/newProjectImg/{create_id}/{img_id}","/updateProjectImg/{pid}/{img_id}"})  //内容图片上传接口
-    public ResponseResult newProjectImg(@PathVariable(required = false) String create_id,@PathVariable(required = false) String pid,@PathVariable String img_id,@RequestParam("file") MultipartFile file){
+    public ResponseResult newProjectImg(@PathVariable(required = false) String create_id,@PathVariable(required = false) Long pid,@PathVariable String img_id,@RequestParam("file") MultipartFile file){
 
         Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
 
@@ -57,7 +56,7 @@ public class CreateController {
     }
 
     @PostMapping("/newProject")  //提交新作品接口
-    public ResponseResult newProject( @RequestBody Item_Details_Temp temp_item){
+    public ResponseResult newProject(@RequestBody Item_Details_Temp temp_item){
 
         Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
 
@@ -66,7 +65,7 @@ public class CreateController {
 
 
     @PostMapping("/updateCoverImg/{pid}")  //更新封面
-    public ResponseResult updateCoverImg(@PathVariable String pid,@RequestParam("file") MultipartFile file){
+    public ResponseResult updateCoverImg(@PathVariable Long pid,@RequestParam("file") MultipartFile file){
 
         String url=createService.updateCoverImg(pid,file);
 
@@ -111,18 +110,21 @@ public class CreateController {
         return createService.getMyProject(uid,sortType,pageNumber*16-16);
     }
 
-    @GetMapping("/deleteMyProject/{pid}")  //删除作品
-    public ResponseResult<String> deleteMyProject(@PathVariable String pid){
+    @PostMapping("/deleteMyProject")  //删除作品
+    public ResponseResult<String> deleteMyProject(@RequestBody Map<String,Object> params){
+        long pid=Long.parseLong(params.get("pid").toString());
         return createService.deleteMyProject(pid);
     }
 
-    @GetMapping("/takeoffProject/{pid}")  //下架作品
-    public ResponseResult<String> takeoffProject(@PathVariable String pid){
+    @PostMapping("/takeoffProject")  //下架作品
+    public ResponseResult<String> takeoffProject(@RequestBody Map<String,Object> params){
+        long pid=Long.parseLong(params.get("pid").toString());
         return createService.takeoffProject(pid);
     }
 
-    @GetMapping("/recoverProject/{pid}")  //恢复作品
-    public ResponseResult<String> reCoverProject(@PathVariable String pid){
+    @PostMapping("/recoverProject")  //恢复作品
+    public ResponseResult<String> reCoverProject(@RequestBody Map<String,Object> params){
+        long pid=Long.parseLong(params.get("pid").toString());
         return createService.reCoverProjectByPid(pid);
     }
 }

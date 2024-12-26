@@ -2,7 +2,8 @@ package com.chen.utils.result;
 
 public enum ReadCode implements ResultCode{
 
-    BOOK_NULL(false,1,"书籍数据为空，获取失败")
+    BOOK_NULL(false,1,"书籍数据为空，获取失败"),
+    READ_FILE_FAILURE(false,1,"读取文件异常"),
     ;
 
     boolean success;

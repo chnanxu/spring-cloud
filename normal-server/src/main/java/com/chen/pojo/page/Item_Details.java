@@ -32,6 +32,7 @@ public class Item_Details {
     private String href;
     private String tag;
     private String create_time;
+    private String update_time;
     private long read_times;
     private long like_times;
     private long comments_times;

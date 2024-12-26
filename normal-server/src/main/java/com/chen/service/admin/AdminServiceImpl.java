@@ -1,6 +1,7 @@
-package com.chen.service;
+package com.chen.service.admin;
 
-import com.chen.mapper.AdminMapper;
+import com.chen.mapper.admin.AdminMapper;
+import com.chen.mapper.user.CreateMapper;
 import com.chen.pojo.admin.Admin_Left_Navbar;
 import com.chen.pojo.community.Community;
 import com.chen.pojo.page.Item_Details;
@@ -12,6 +13,7 @@ import com.chen.utils.result.AdminCode;
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.ResponseResult;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +26,8 @@ import java.util.List;
 public class AdminServiceImpl implements AdminService{
 
     private final AdminMapper adminMapper;
+
+    private final CreateMapper createMapper;
 
     @Override
     public ResponseResult<List<Admin_Left_Navbar>> getAdminLeftNavbar() {
@@ -40,61 +44,6 @@ public class AdminServiceImpl implements AdminService{
         }
 
         return new ResponseResult<>(AdminCode.GET_SUCCESS,result);
-    }
-
-    @Override
-    public String refuseProject(String uid, long pid,String refuse_reason) {
-        if(adminMapper.refuseProjectById(uid,pid,refuse_reason)==1){
-            return "操作成功";
-        }else{
-            return "操作失败";
-        }
-    }
-
-    @Override
-    public String agreeProject(String uid, long pid) {
-        Item_Details_Temp temp_item=adminMapper.getTempProjectById(uid,pid);
-
-        if(temp_item==null){
-            return "作品不存在";
-        }
-
-        if(temp_item.getContent()==null){
-            return "内容为空,不可以发布哦";
-        }
-
-        temp_item.setHref("/details/"+pid);
-        int result=adminMapper.setProject(temp_item);
-
-        if(result==1){
-            adminMapper.deleteTempProject(pid);
-            return "审核通过";
-        }else{
-            return "异常,请联系管理员";
-        }
-
-
-    }
-
-    @Override
-    public int takeoffProject(long pid) {
-        return adminMapper.takeoffProjectById(pid);
-    }
-
-    @Override
-    public List<Item_Details_Temp> getTempProject(int pageNum) {
-        return adminMapper.getTempProjectList(pageNum*10-10);
-    }
-
-    @Override
-    public List<Item_Details> getProject(int pageNum) {
-        return adminMapper.getProjectList(pageNum*10-10);
-    }
-
-
-    @Override
-    public List<Item_Details> getTakeoffProject(int pageNum) {
-        return adminMapper.getTakeoffProjectList(pageNum*10-10);
     }
 
     @Override

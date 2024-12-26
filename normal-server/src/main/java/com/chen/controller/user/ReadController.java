@@ -1,6 +1,5 @@
-package com.chen.controller;
+package com.chen.controller.user;
 
-import com.alibaba.fastjson.JSON;
 import com.chen.pojo.read.Book_Detail;
 import com.chen.service.ReadService;
 import com.chen.utils.result.ResponseResult;
@@ -22,6 +21,11 @@ public class ReadController {
     @GetMapping("/{bid}")
     public ResponseResult<Map<String,List<String>>> getBookDetail(@PathVariable Integer bid){
         return readService.getBookDetail(bid);
+    }
+
+    @GetMapping("/getBookChapterList/{bid}")
+    public ResponseResult getBookChapterList(@PathVariable Integer bid){
+        return readService.getBookChapterList(bid);
     }
 
     @GetMapping("/{bid}/chapterPage")

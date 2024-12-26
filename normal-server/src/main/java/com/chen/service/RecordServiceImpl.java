@@ -1,6 +1,6 @@
 package com.chen.service;
 
-import com.chen.mapper.RecordMapper;
+import com.chen.mapper.user.RecordMapper;
 import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.record.Diary_Book;
 import com.chen.pojo.user.Oauth2UserinfoResult;

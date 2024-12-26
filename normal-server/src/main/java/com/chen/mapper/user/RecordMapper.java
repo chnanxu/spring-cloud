@@ -1,4 +1,4 @@
-package com.chen.mapper;
+package com.chen.mapper.user;
 
 
 import com.chen.pojo.page.Item_Details;

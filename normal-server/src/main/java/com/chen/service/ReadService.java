@@ -13,6 +13,8 @@ public interface ReadService {
 
     ResponseResult<Map<String,List<String>>> getBookDetail(Integer bid);
 
+    ResponseResult getBookChapterList(Integer bid);
+
     ResponseResult<Map<Integer,String>> getChapterPage(Integer bid,String chapterName);
 
     ResponseResult<String> updateReadRecord(Integer bid,String chapter_name,Integer start_page,Integer end_page);

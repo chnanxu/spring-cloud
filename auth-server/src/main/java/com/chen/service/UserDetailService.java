@@ -17,11 +17,9 @@ public interface UserDetailService extends UserDetailsService {
     @Override
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
-    User findByName(String username);
-
     ResponseResult<String> createUserIpLocation(String ip, HttpRequest headers);
 
-    int register(User user);
+    ResponseResult<String> register(User user);
 
     Oauth2UserinfoResult getLoginUserInfo();
 

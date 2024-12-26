@@ -10,8 +10,8 @@ public enum UserCode implements ResultCode {
     NOLOGIN(true,22,"没有登录!"),
     PASSWORDFAILURE(true,23,"账号信息错误"),
     NOPERMISSION(false,403,"没有权限"),
-
-
+    UPDATE_SUCCESS(true,0,"更新成功"),
+    UPDATE_FAILURE(false,1,"更新失败"),
     ;
 
 

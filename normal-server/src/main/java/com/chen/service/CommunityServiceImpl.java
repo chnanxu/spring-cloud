@@ -2,7 +2,7 @@ package com.chen.service;
 
 
 import com.chen.mapper.CommunityMapper;
-import com.chen.mapper.UserMapper;
+import com.chen.mapper.user.UserMapper;
 import com.chen.pojo.community.Community;
 import com.chen.pojo.community.CommunityLeftNav;
 import com.chen.pojo.community.CommunityModule;

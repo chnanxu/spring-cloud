@@ -1,5 +1,6 @@
 package com.chen.pojo.page;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,16 +26,16 @@ public class Item_Comments {
     private String reuname;
     private String reuid;
 
-    @Transient
+    @TableField(exist = false)
     private int sonCommentCount;
 
-    @Transient
+    @TableField(exist = false)
     private List<Item_Comments> sonList;
 
-    @Transient
+    @TableField(exist = false)
     private boolean isUserLike;
 
-    @Transient
+    @TableField(exist = false)
     private Item_Details item_detail;
 
 }

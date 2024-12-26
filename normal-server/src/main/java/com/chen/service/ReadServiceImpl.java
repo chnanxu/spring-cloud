@@ -1,6 +1,6 @@
 package com.chen.service;
 
-import com.chen.mapper.ReadMapper;
+import com.chen.mapper.user.ReadMapper;
 import com.chen.pojo.read.Book_Detail;
 import com.chen.pojo.read.User_Read_Record;
 import com.chen.pojo.user.Oauth2UserinfoResult;
@@ -10,19 +10,15 @@ import com.chen.utils.result.ResponseResult;
 import com.chen.utils.result.UserCode;
 import com.chen.utils.util.CustomSecurityProperties;
 import lombok.RequiredArgsConstructor;
-import nl.siegmann.epublib.domain.Book;
+import nl.siegmann.epublib.domain.*;
 import nl.siegmann.epublib.epub.EpubReader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +28,16 @@ public class ReadServiceImpl implements ReadService{
     private final UserDetailService userDetailService;
     private final CustomSecurityProperties customSecurityProperties;
 
-    private static Book_Detail saveBookToPath(String path,String folderName,String fileType,String imgType,MultipartFile file,MultipartFile img,Oauth2UserinfoResult user){
+    private static Book_Detail saveBookToPath(
+            String path,   //实际保存路径
+            String url,    //数据库存储路径
+            String folderName,   //保存文件夹名称
+            String fileType,    //文件类型
+            String imgType,    //图片类型
+            MultipartFile file,  //图书文件
+            MultipartFile img,  //自定义封面文件
+            Oauth2UserinfoResult user   //登陆用户
+    ){
 
         try{
             if(fileType.toLowerCase().contains("txt")){
@@ -41,21 +46,40 @@ public class ReadServiceImpl implements ReadService{
                 String newFileName=sdf.format(System.currentTimeMillis())+fileType;
                 String imgFileName="cover_img"+imgType;
                 //图书文件
-                file.transferTo(new File(path+"\\"+newFileName));
+                file.transferTo(new File(path+"/"+newFileName));
                 //封面
-                img.transferTo(new File(path+"\\"+imgFileName));
-                String url = "images/user_data/"+user.getUid()+"/book/"+folderName+"/";
+                img.transferTo(new File(path+"/"+imgFileName));
+
                 book.setTitle(folderName);
                 book.setAuthor(user.getUname());
                 book.setUid(user.getUid());
-                book.setSave_path(url+newFileName);
-                book.setCover_img(url+imgFileName);
+                book.setSave_path(url+"/"+newFileName);
+                book.setCover_img(url+"/"+imgFileName);
+                book.setFile_type("txt");
                 return book;
             } else if (fileType.toLowerCase().contains("epub")) {
+                //图书实体
+                Book_Detail book=new Book_Detail();
+
                 EpubReader epubReader=new EpubReader();
                 Book epubBook=epubReader.readEpub(file.getInputStream());
-                List<String> titles=epubBook.getMetadata().getTitles();
-                System.out.println(titles);
+                List<Author> authors=epubBook.getMetadata().getAuthors();
+                StringBuilder author_result= new StringBuilder();
+                for(Author author:authors){
+                    author_result.append(author);
+                }
+                String cover_imgName="cover_img"+imgType;
+
+                file.transferTo(new File(path+"/"+file.getOriginalFilename()));
+                img.transferTo(new File(path+"/"+cover_imgName));
+
+                book.setTitle(epubBook.getTitle());
+                book.setAuthor(author_result.toString());
+                book.setUid(user.getUid());
+                book.setSave_path(url+"/"+file.getOriginalFilename());
+                book.setCover_img(url+"/"+cover_imgName);
+                book.setFile_type("epub");
+                return book;
             }
         }catch(IOException ioe){
             ioe.printStackTrace();
@@ -79,13 +103,13 @@ public class ReadServiceImpl implements ReadService{
             //封面
             String imgName= img.getOriginalFilename();
             String imgType=imgName.substring(imgName.lastIndexOf('.'));
-            String path = customSecurityProperties.getStaticPath()+"\\images\\user_data\\"+user.getUid()+"\\book\\"+folderName;
-
+            String url="images/user_data/"+user.getUid()+"/book/"+folderName;
+            String path = customSecurityProperties.getStaticPath()+url;
             File f=new File(path);
             if(!f.exists()){
                 f.mkdir();
             }
-            Book_Detail book=saveBookToPath(path,folderName,fileType,imgType,file,img,user);
+            Book_Detail book=saveBookToPath(path,url,folderName,fileType,imgType,file,img,user);
             if(book!=null){
                 readMapper.insertBook(book);
             }else{
@@ -98,44 +122,85 @@ public class ReadServiceImpl implements ReadService{
     }
 
     @Override  //获取图书详情
-    public ResponseResult<Map<String,List<String>>> getBookDetail(Integer bid) {
+    public ResponseResult getBookDetail(Integer bid) {
 
+        return new ResponseResult(CommonCode.SUCCESS);
+    }
+
+    @Override
+    public ResponseResult getBookChapterList(Integer bid) {
         Book_Detail book=readMapper.getBookDetail(bid);
         if(book==null){
             return new ResponseResult<>(ReadCode.BOOK_NULL);
         }
 
         String path=customSecurityProperties.getStaticPath()+book.getSave_path();
-        Map<String,List<String>> result=new HashMap<>();
-        try{
-            ProcessBuilder pb=new ProcessBuilder("python","normal-server/src/main/resources/python/textFilter.py",path);
-            pb.environment().put("PYTHONIOENCODING","utf-8");
-            Process process=pb.start();
+        if(book.getFile_type().equals("epub")){
+            try{
+                EpubReader epubReader=new EpubReader();
+                Book epubBook=epubReader.readEpub(new FileInputStream(path));
 
-            try (BufferedReader reader=new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))){
-                String line;
-                List<String> chapterList=new ArrayList<>();
-                while ((line=reader.readLine())!=null){
-                    chapterList.add(line);
+                //读取章节目录
+                TableOfContents tocContents= epubBook.getTableOfContents();
+                List<TOCReference> tocReferences= tocContents.getTocReferences();
+
+                Map<String,List<String>> chapterMap=new LinkedHashMap<>();
+
+                for (TOCReference tocReference : tocReferences) {
+
+                    List<String> son_chapterList=new ArrayList<>();
+                    if(!tocReference.getChildren().isEmpty()){
+                        //子章节递归
+                        for (TOCReference child : tocReference.getChildren()) {
+                            son_chapterList.add(child.getTitle());
+                        }
+                    }
+                    chapterMap.put(tocReference.getTitle(),son_chapterList);
                 }
-                result.put("chapterList",chapterList);
+
+                return new ResponseResult<>(CommonCode.SUCCESS,chapterMap);
+            }catch (IOException e){
+                e.printStackTrace();
+                return new ResponseResult<>(ReadCode.READ_FILE_FAILURE);
+            }finally {
+
             }
-            process.waitFor();
 
-        }catch (IOException | InterruptedException e){
-            e.printStackTrace();
+        }else{
+
+            Map<String,List<String>> result=new HashMap<>();
+            try{
+                ProcessBuilder pb=new ProcessBuilder("python","normal-server/src/main/resources/python/textFilter.py",path);
+                pb.environment().put("PYTHONIOENCODING","utf-8");
+                Process process=pb.start();
+
+                try (BufferedReader reader=new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))){
+                    String line;
+                    List<String> chapterList=new ArrayList<>();
+                    while ((line=reader.readLine())!=null){
+                        chapterList.add(line);
+                    }
+                    result.put("chapterList",chapterList);
+                }
+                process.waitFor();
+
+            }catch (IOException | InterruptedException e){
+                e.printStackTrace();
+                return new ResponseResult<>(ReadCode.READ_FILE_FAILURE);
+            }
+
+            Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
+            User_Read_Record readRecord=readMapper.getUserReadRecord(user.getUid(),bid);
+            if(readRecord!=null){
+                List<String> recordList=new ArrayList<>();
+                recordList.add(readRecord.getChapter_name());
+                recordList.add(readRecord.getStart_page().toString());
+                result.put("user_read_record",recordList);
+            }
+
+            return new ResponseResult<>(CommonCode.SUCCESS,result);
         }
 
-        Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
-        User_Read_Record readRecord=readMapper.getUserReadRecord(user.getUid(),bid);
-        if(readRecord!=null){
-            List<String> recordList=new ArrayList<>();
-            recordList.add(readRecord.getChapter_name());
-            recordList.add(readRecord.getStart_page().toString());
-            result.put("user_read_record",recordList);
-        }
-
-        return new ResponseResult<>(CommonCode.SUCCESS,result);
 
     }
 
@@ -145,24 +210,40 @@ public class ReadServiceImpl implements ReadService{
         Book_Detail book=readMapper.getBookDetail(bid);
         String path=customSecurityProperties.getStaticPath()+book.getSave_path();
         Map<Integer,String> chapterPage=new HashMap<>();
-        try{
-            ProcessBuilder pb=new ProcessBuilder("python","normal-server/src/main/resources/python/chapterPage.py",path,chapterName);
-            pb.environment().put("PYTHONIOENCODING","utf-8");
-            Process process=pb.start();
-            try(BufferedReader reader=new BufferedReader(new InputStreamReader(process.getInputStream(),"utf-8"))){
-                String line;
-                Integer num=0;
-                while ((line=reader.readLine())!=null){
-                    chapterPage.put(num,line.trim());
-                    num+=1;
-                }
-            }
-            process.waitFor();
 
-        }catch (IOException | InterruptedException e){
-            e.printStackTrace();
+        if(book.getFile_type().equals("epub")){
+            try{
+                EpubReader epubReader=new EpubReader();
+                Book epubBook=epubReader.readEpub(new FileInputStream(path));
+                epubBook.getContents();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+
+            return new ResponseResult<>(CommonCode.SUCCESS);
+        }else{
+
+            try{
+                ProcessBuilder pb=new ProcessBuilder("python","normal-server/src/main/resources/python/chapterPage.py",path,chapterName);
+                pb.environment().put("PYTHONIOENCODING","utf-8");
+                Process process=pb.start();
+                try(BufferedReader reader=new BufferedReader(new InputStreamReader(process.getInputStream(),"utf-8"))){
+                    String line;
+                    Integer num=0;
+                    while ((line=reader.readLine())!=null){
+                        chapterPage.put(num,line.trim());
+                        num+=1;
+                    }
+                }
+                process.waitFor();
+
+            }catch (IOException | InterruptedException e){
+                e.printStackTrace();
+            }
+            return new ResponseResult<>(CommonCode.SUCCESS,chapterPage);
         }
-        return new ResponseResult<>(CommonCode.SUCCESS,chapterPage);
+
+
     }
 
     @Override

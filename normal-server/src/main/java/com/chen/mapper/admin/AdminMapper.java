@@ -1,4 +1,4 @@
-package com.chen.mapper;
+package com.chen.mapper.admin;
 
 
 import com.chen.pojo.admin.Admin_Left_Navbar;
@@ -25,26 +25,6 @@ public interface AdminMapper {
     List<User> getUser(int pageNum);
 
     List<Role> getRole(int pageNum);
-
-    List<Item_Details_Temp> getTempProjectList(int pageNum);
-
-    Item_Details_Temp getTempProjectById(String uid,long pid);
-
-    List<Item_Details> getProjectList(int pageNum);
-
-    List<Item_Details> getDeletedProjectList(int pageNum);
-
-    int reCoverProject(long pid);
-
-    int setProject(Item_Details_Temp temp_item);
-
-    void deleteTempProject(long pid);
-
-    int refuseProjectById(String uid,long pid,String refuse_reason);
-
-    int deleteProjectById(long pid);
-
-    int takeoffProjectById(long pid);
 
     List<Community> getCommunity(int pageNum);
 

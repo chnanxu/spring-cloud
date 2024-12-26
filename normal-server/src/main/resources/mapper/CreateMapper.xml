@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.chen.mapper.CreateMapper">
+<mapper namespace="com.chen.mapper.user.CreateMapper">
 
     <select id="findTempProjectByPid">
         select * from item_details_temp where pid=#{pid}
     </select>
-
-    <insert id="createNewProject" parameterType="Item_Details_Temp">
-        insert into item_details_temp values (#{uid},#{uname},#{pid},#{community_id},#{community_name},#{type_id},#{type_name},#{detail_type},#{title},#{simple_text},#{content},#{cover_img},#{href},#{tag},1,#{create_time},#{refuse_reason},#{read_times},#{like_times},#{comments_times},#{favorites})
-    </insert>   <!--创建新作品-->
 
     <update id="updateTempProject">
         update item_details_temp set community_id=#{community_id},
@@ -25,33 +21,4 @@
         where pid=#{pid}
     </update>
 
-    <update id="takeoffProject">
-        update item_details set isTakeoff=1
-                where pid=#{pid}
-    </update>
-
-    <select id="getMyProjectCount">
-        select count(*) from item_details where uid=#{uid}
-    </select>
-
-    <select id="getMyTempProjectCount">
-        select count(*) from item_details_temp where uid=#{uid} and (isOK=#{isOK} or isOK=-#{isOK})
-    </select>
-
-    <select id="getMyProjectByTime">
-        select * from item_details
-                 where uid=#{uid} and isTakeoff=0
-                 order by create_time desc
-        LIMIT ${pageNumber},16
-    </select>
-    <select id="getMyProjectByHot">
-        select * from item_details
-                 where uid=#{uid} and isTakeoff=0
-                 order by read_times desc
-        LIMIT ${pageNumber},16
-    </select>
-
-    <select id="getMyProjectCoverImgSrc">
-        select cover_img from item_details where pid=#{pid}
-    </select>
 </mapper>
