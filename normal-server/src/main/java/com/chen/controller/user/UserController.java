@@ -7,8 +7,8 @@ import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.pojo.user.User;
 import com.chen.pojo.user.User_likeuser;
-import com.chen.service.UserDetailService;
-import com.chen.service.UserService;
+import com.chen.service.user.UserDetailService;
+import com.chen.service.user.UserService;
 
 
 import com.chen.utils.result.CommonCode;

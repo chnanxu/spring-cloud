@@ -1,4 +1,4 @@
-package com.chen.service;
+package com.chen.service.user;
 
 import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.page.Item_Details_Temp;
@@ -7,7 +7,6 @@ import com.chen.utils.result.ResponseResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public interface CreateService {

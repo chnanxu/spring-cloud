@@ -1,4 +1,4 @@
-package com.chen.service;
+package com.chen.service.user;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;

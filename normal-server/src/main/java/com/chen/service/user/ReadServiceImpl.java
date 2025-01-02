@@ -1,4 +1,4 @@
-package com.chen.service;
+package com.chen.service.user;
 
 import com.chen.mapper.user.ReadMapper;
 import com.chen.pojo.read.Book_Detail;
@@ -127,9 +127,9 @@ public class ReadServiceImpl implements ReadService{
         return new ResponseResult(CommonCode.SUCCESS);
     }
 
-    @Override
+    @Override  //获取目录
     public ResponseResult getBookChapterList(Integer bid) {
-        Book_Detail book=readMapper.getBookDetail(bid);
+        Book_Detail book=readMapper.selectById(bid);
         if(book==null){
             return new ResponseResult<>(ReadCode.BOOK_NULL);
         }
@@ -144,18 +144,18 @@ public class ReadServiceImpl implements ReadService{
                 TableOfContents tocContents= epubBook.getTableOfContents();
                 List<TOCReference> tocReferences= tocContents.getTocReferences();
 
-                Map<String,List<String>> chapterMap=new LinkedHashMap<>();
+                Map<String,Map<String,String>> chapterMap=new LinkedHashMap<>();
 
                 for (TOCReference tocReference : tocReferences) {
 
-                    List<String> son_chapterList=new ArrayList<>();
+                    Map<String,String> son_chapterMap=new LinkedHashMap<>();
                     if(!tocReference.getChildren().isEmpty()){
                         //子章节递归
                         for (TOCReference child : tocReference.getChildren()) {
-                            son_chapterList.add(child.getTitle());
+                            son_chapterMap.put(child.getTitle(), child.getResourceId());
                         }
                     }
-                    chapterMap.put(tocReference.getTitle(),son_chapterList);
+                    chapterMap.put(tocReference.getTitle(),son_chapterMap);
                 }
 
                 return new ResponseResult<>(CommonCode.SUCCESS,chapterMap);
@@ -205,22 +205,26 @@ public class ReadServiceImpl implements ReadService{
     }
 
     @Override  //获取章节
-    public ResponseResult<Map<Integer,String>> getChapterPage(Integer bid,String chapterName){
+    public ResponseResult getChapterPage(Integer bid,String chapterName){
 
-        Book_Detail book=readMapper.getBookDetail(bid);
+        Book_Detail book=readMapper.selectById(bid);
         String path=customSecurityProperties.getStaticPath()+book.getSave_path();
         Map<Integer,String> chapterPage=new HashMap<>();
 
         if(book.getFile_type().equals("epub")){
+            String xmlPage="";
             try{
                 EpubReader epubReader=new EpubReader();
                 Book epubBook=epubReader.readEpub(new FileInputStream(path));
-                epubBook.getContents();
+                Resources resources=epubBook.getResources();
+                Resource chapterContent =resources.getById(chapterName);
+                byte[] data=chapterContent.getData();
+                xmlPage=new String(data,chapterContent.getInputEncoding());
             }catch (IOException e){
                 e.printStackTrace();
             }
 
-            return new ResponseResult<>(CommonCode.SUCCESS);
+            return new ResponseResult<>(CommonCode.SUCCESS,xmlPage);
         }else{
 
             try{
@@ -260,7 +264,7 @@ public class ReadServiceImpl implements ReadService{
                         end_page
                 );
             }else{
-                Book_Detail book=readMapper.getBookDetail(bid);
+                Book_Detail book=readMapper.selectById(bid);
                 readMapper.insertReadRecord(
                         user.getUid(),
                         bid,book.getTitle(),

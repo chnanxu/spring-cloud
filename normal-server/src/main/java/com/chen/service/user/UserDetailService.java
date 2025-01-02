@@ -1,11 +1,8 @@
-package com.chen.service;
+package com.chen.service.user;
 
 import com.chen.pojo.user.Oauth2ThirdAccount;
 import com.chen.pojo.user.Oauth2UserinfoResult;
-import com.chen.pojo.user.UserPersonalize;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public interface UserDetailService {

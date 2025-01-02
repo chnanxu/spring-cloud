@@ -1,5 +1,6 @@
 package com.chen.pojo.read;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +13,9 @@ import lombok.experimental.Accessors;
 @Accessors
 @TableName("book_detail")
 public class Book_Detail {
+    @TableId
     private Integer bid;
+
     private String title;
     private String author;
     private String uid;

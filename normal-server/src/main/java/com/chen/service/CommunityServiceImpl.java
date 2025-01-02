@@ -9,6 +9,7 @@ import com.chen.pojo.community.CommunityModule;
 import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 
+import com.chen.service.user.UserDetailService;
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.ResponseResult;
 import lombok.RequiredArgsConstructor;

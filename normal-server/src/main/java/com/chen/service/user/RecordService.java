@@ -1,4 +1,4 @@
-package com.chen.service;
+package com.chen.service.user;
 
 import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.record.Diary_Book;

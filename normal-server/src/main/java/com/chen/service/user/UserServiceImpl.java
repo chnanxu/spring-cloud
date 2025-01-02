@@ -1,4 +1,4 @@
-package com.chen.service;
+package com.chen.service.user;
 
 
 import com.alibaba.nacos.shaded.com.google.common.collect.Maps;

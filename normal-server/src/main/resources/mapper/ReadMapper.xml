@@ -2,13 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chen.mapper.user.ReadMapper">
-    <insert id="insertBook">
-        insert into book_detail values(default,#{title},#{author},#{uid},CURTIME(),#{save_path},#{cover_img})
-    </insert>
-
-    <select id="getBookDetail">
-        select * from book_detail where bid=#{bid}
-    </select>
 
     <select id="getBookList">
         select * from book_detail where uid=#{uid}

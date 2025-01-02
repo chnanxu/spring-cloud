@@ -8,6 +8,8 @@ import com.chen.pojo.page.HotTag;
 import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.pojo.user.UserPersonalize;
+import com.chen.service.user.UserDetailService;
+import com.chen.service.user.UserService;
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.ResponseResult;
 import com.chen.utils.util.RedisCache;

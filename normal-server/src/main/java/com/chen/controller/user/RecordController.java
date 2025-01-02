@@ -2,7 +2,7 @@ package com.chen.controller.user;
 
 
 import com.chen.pojo.record.Diary_Book;
-import com.chen.service.RecordService;
+import com.chen.service.user.RecordService;
 
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.ResponseResult;

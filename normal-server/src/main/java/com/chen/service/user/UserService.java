@@ -1,12 +1,10 @@
-package com.chen.service;
+package com.chen.service.user;
 
 
 import com.chen.pojo.community.Community;
 import com.chen.pojo.page.Item_Comments;
 import com.chen.pojo.page.Item_Details;
 import com.chen.pojo.user.Oauth2UserinfoResult;
-import com.chen.pojo.user.User;
-import com.chen.pojo.user.UserPersonalize;
 import com.chen.pojo.user.User_likeuser;
 import com.chen.utils.result.ResponseResult;
 import org.springframework.stereotype.Service;

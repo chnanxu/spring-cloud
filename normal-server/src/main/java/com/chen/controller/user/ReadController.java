@@ -1,7 +1,7 @@
 package com.chen.controller.user;
 
 import com.chen.pojo.read.Book_Detail;
-import com.chen.service.ReadService;
+import com.chen.service.user.ReadService;
 import com.chen.utils.result.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
