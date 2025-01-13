@@ -37,7 +37,6 @@ public class ResourceServerConfig {
         httpSecurity.csrf(Customizer.withDefaults());
         httpSecurity.cors(Customizer.withDefaults());
 
-
         httpSecurity.authorizeHttpRequests((authorize)->authorize
                 .requestMatchers("/user/**","/read/**","/create/**","/admin/**").authenticated()
                 .anyRequest().permitAll())
@@ -67,11 +66,11 @@ public class ResourceServerConfig {
 
     }
 
-    @Bean
-    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-    Advisor preAuthorize(){
-        return AuthorizationManagerBeforeMethodInterceptor.preAuthorize();
-    }
+//    @Bean
+//    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+//    Advisor preAuthorize(){
+//        return AuthorizationManagerBeforeMethodInterceptor.preAuthorize();
+//    }
 
 
     @Bean

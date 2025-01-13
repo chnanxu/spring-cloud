@@ -4,7 +4,7 @@ package com.chen.mapper;
 import com.chen.pojo.community.Community;
 import com.chen.pojo.community.CommunityLeftNav;
 import com.chen.pojo.community.CommunityModule;
-import com.chen.pojo.page.Item_Details;
+import com.chen.pojo.page.Posts;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -32,10 +32,10 @@ public interface CommunityMapper {
 
     List<CommunityModule> getCommunityModule(long community_id);
 
-    List<Item_Details> getCommunityDetails(long community_id, int pageNum, LocalDate queryTimeParameters);
+    List<Posts> getCommunityDetails(long community_id, int pageNum, LocalDate queryTimeParameters);
 
-    List<Item_Details> getNews(long community_id);
+    List<Posts> getNews(long community_id);
 
-    List<Item_Details> getStrategy(long community_id);
+    List<Posts> getStrategy(long community_id);
 
 }

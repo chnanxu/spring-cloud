@@ -3,7 +3,7 @@ package com.chen.service.user;
 
 import com.chen.pojo.community.Community;
 import com.chen.pojo.page.Item_Comments;
-import com.chen.pojo.page.Item_Details;
+import com.chen.pojo.page.Posts;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.pojo.user.User_likeuser;
 import com.chen.utils.result.ResponseResult;
@@ -28,7 +28,7 @@ public interface UserService {
 
     ResponseResult<List<User_likeuser>> getUserSubscribe(Integer pageNumber);
 
-    ResponseResult<Map<String,List<Item_Details>>> getSubscribeProject(String queryDate, String uid, Integer pageNumber);
+    ResponseResult<Map<String,List<Posts>>> getSubscribeProject(String queryDate, String uid, Integer pageNumber);
 
     List<Item_Comments> getUserComments(String uid,int pageNum);
 

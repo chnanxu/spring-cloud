@@ -3,8 +3,6 @@ package com.chen.service.admin;
 
 import com.chen.pojo.admin.Admin_Left_Navbar;
 import com.chen.pojo.community.Community;
-import com.chen.pojo.page.Item_Details;
-import com.chen.pojo.page.Item_Details_Temp;
 import com.chen.pojo.page.ReportItem;
 import com.chen.pojo.user.UserRole;
 import com.chen.utils.result.ResponseResult;

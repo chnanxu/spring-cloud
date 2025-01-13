@@ -194,7 +194,7 @@ public class RedisRegisteredClientRepository implements RegisteredClientReposito
         log.info("Initialize client information to Redis.");
         // 默认需要授权确认
         ClientSettings.Builder builder = ClientSettings.builder()
-                .requireAuthorizationConsent(Boolean.FALSE);
+                .requireAuthorizationConsent(Boolean.TRUE);
 
         TokenSettings.Builder
                 tokenSettingsBuilder = TokenSettings.builder()

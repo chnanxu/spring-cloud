@@ -3,8 +3,7 @@ package com.chen.mapper.admin;
 
 import com.chen.pojo.admin.Admin_Left_Navbar;
 import com.chen.pojo.community.Community;
-import com.chen.pojo.page.Item_Details;
-import com.chen.pojo.page.Item_Details_Temp;
+import com.chen.pojo.page.Posts;
 import com.chen.pojo.page.ReportItem;
 import com.chen.pojo.permission.Role;
 import com.chen.pojo.user.User;
@@ -28,7 +27,7 @@ public interface AdminMapper {
 
     List<Community> getCommunity(int pageNum);
 
-    List<Item_Details> getTakeoffProjectList(int pageNum);
+    List<Posts> getTakeoffProjectList(int pageNum);
 
     Community updateCommunity(Community community);
 

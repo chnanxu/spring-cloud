@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserLikeComment {
     private String uid;
-    private long pid;
-    private long comment_id;
+    private String pid;
+    private long commentId;
 }

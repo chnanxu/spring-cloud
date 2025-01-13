@@ -87,6 +87,10 @@ public class AuthorizationConfig {
     }
 
 
+    /**
+     * token签发地址
+     * @return
+     */
     @Bean
     public AuthorizationServerSettings authorizationServerSettings(){
         return AuthorizationServerSettings.builder()

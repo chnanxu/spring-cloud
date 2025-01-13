@@ -3,9 +3,10 @@ package com.chen.controller.user;
 import com.chen.mapper.user.UserMapper;
 import com.chen.pojo.community.Community;
 import com.chen.pojo.page.Item_Comments;
-import com.chen.pojo.page.Item_Details;
+import com.chen.pojo.page.Posts;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.pojo.user.User;
+import com.chen.pojo.user.UserPrivacy;
 import com.chen.pojo.user.User_likeuser;
 import com.chen.service.user.UserDetailService;
 import com.chen.service.user.UserService;
@@ -53,6 +54,11 @@ public class UserController {
         return new ResponseResult<>(CommonCode.SUCCESS,user);
     }
 
+    @GetMapping("/getUserPrivacySetting")
+    public ResponseResult<UserPrivacy> getUserPrivacySetting(){
+        return userDetailService.getPrivacySetting();
+    }
+
     @GetMapping("/getUserLikeGroup")   //获取用户关注社区接口
     public ResponseResult<List<Community>> getUserLikeCommunityList(){
 
@@ -64,13 +70,13 @@ public class UserController {
 
     }
 
-    @GetMapping("/getUserSubscribe/{pageNumber}")
+    @GetMapping("/getUserSubscribe/{pageNumber}") //获取用户订阅
     public ResponseResult<List<User_likeuser>> getUserSubscribe(@PathVariable Integer pageNumber){
         return userService.getUserSubscribe(pageNumber);
     }
 
     @GetMapping("/getSubscribeProject/{queryDate}/{uid}/{pageNumber}")
-    public ResponseResult<Map<String,List<Item_Details>>> getSubscribeProject(@PathVariable String queryDate, @PathVariable(required = false) String uid, @PathVariable Integer pageNumber){
+    public ResponseResult<Map<String,List<Posts>>> getSubscribeProject(@PathVariable String queryDate, @PathVariable(required = false) String uid, @PathVariable Integer pageNumber){
         return userService.getSubscribeProject(queryDate,uid,pageNumber);
     }
 
@@ -148,7 +154,7 @@ public class UserController {
     }
 
     @GetMapping("/isLikeProject/{pid}")  //用户是否喜欢作品
-    public ResponseResult<String> isLikeProject(@PathVariable long pid){
+    public ResponseResult<String> isLikeProject(@PathVariable String pid){
 
         Oauth2UserinfoResult loginUser=userDetailService.getLoginUserInfo();
 

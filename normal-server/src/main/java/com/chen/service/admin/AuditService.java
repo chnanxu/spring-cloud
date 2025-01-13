@@ -1,7 +1,8 @@
 package com.chen.service.admin;
 
-import com.chen.pojo.page.Item_Details;
-import com.chen.pojo.page.Item_Details_Temp;
+import com.chen.pojo.page.Posts;
+import com.chen.pojo.page.Posts_Takeoff;
+import com.chen.pojo.page.Posts_Temp;
 import com.chen.utils.result.ResponseResult;
 import org.springframework.stereotype.Service;
 
@@ -10,19 +11,19 @@ import java.util.List;
 @Service
 public interface AuditService {
 
-    ResponseResult<String> refuseProject(String uid, long pid, String refuse_reason);
+    ResponseResult<String> refuseProject(String uid, String pid, String refuse_reason);
 
-    String agreeProject(String uid,long pid);
+    String agreeProject(String uid,String pid);
 
-    ResponseResult<String> takeoffProject(long pid,String takeoff_reason);
+    ResponseResult<String> takeoffProject(String pid,String takeoffTime,String takeoffReason);
 
-    ResponseResult<String> deleteProjectById(long pid);
+    ResponseResult<String> deleteProjectById(String pid,String projectType);
 
-    ResponseResult<String> reCoverProject(long pid);
+    ResponseResult<String> reCoverProject(String pid);
 
-    List<Item_Details_Temp> getTempProject(int pageNum);
+    ResponseResult<List<Posts_Temp>> getTempProject(int pageNum, int pageSize, String sortField, String sortKeywords);
 
-    List<Item_Details> getProject(int pageNum);
+    ResponseResult<List<Posts>> getProject(int pageNum, int pageSize, String sortField, String sortKeywords);
 
-    List<Item_Details_Temp> getTakeoffProject(int pageNum);
+    ResponseResult<List<Posts_Takeoff>> getTakeoffProject(int pageNum, int pageSize, String sortField, String sortKeywords);
 }

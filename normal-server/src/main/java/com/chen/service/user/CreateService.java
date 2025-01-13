@@ -1,7 +1,7 @@
 package com.chen.service.user;
 
-import com.chen.pojo.page.Item_Details;
-import com.chen.pojo.page.Item_Details_Temp;
+import com.chen.pojo.page.Posts;
+import com.chen.pojo.page.Posts_Temp;
 
 import com.chen.utils.result.ResponseResult;
 import org.springframework.stereotype.Service;
@@ -10,32 +10,33 @@ import java.util.List;
 
 @Service
 public interface CreateService {
-
     String newCoverImg(String create_id, MultipartFile file, String uid);
 
     ResponseResult<String> newProjectImg(String create_id, String img_id, MultipartFile file, String uid);
 
-    ResponseResult<List<String>> newProject(Item_Details_Temp temp_item, String uid);
+    ResponseResult<List<String>> newProject(Posts_Temp temp_item, String uid);
 
-    ResponseResult<String> updateContentImg(Long pid,String img_id,MultipartFile file);
+    ResponseResult<Posts_Temp> saveTempProject(Posts_Temp temp_item, String uid);
 
-    ResponseResult reUploadProject(Item_Details_Temp temp_item);
+    ResponseResult<String> updateContentImg(String pid,String img_id,MultipartFile file);
+
+    ResponseResult reUploadProject(Posts_Temp temp_item);
 
     String uploadVideo(String create_id,MultipartFile video,String uid);
 
-    Integer getMyProjectCount(String uid,String sortType);
+    ResponseResult<Integer> getMyProjectCount(String uid,String sortType);
 
-    ResponseResult<List<Item_Details>> getMyProject(String uid,String sortType,int PageNumber);
+    ResponseResult<List<Posts>> getMyProject(int pageNumber, int pageSize, String sortField, String sortKeywords);
 
-    ResponseResult<List<Item_Details_Temp>> getMyProjectTemp(String uid,String sortType,int pageNumber);
+    ResponseResult<List<Posts_Temp>> getMyProjectTemp(int pageNumber, int pageSize, String sortField, String sortKeywords);
 
-    String updateCoverImg(Long pid,MultipartFile file);
+    ResponseResult<String> updateCoverImg(String pid,MultipartFile file);
 
-    ResponseResult<String> deleteMyProject(Long pid);
+    ResponseResult<String> deleteMyProject(String pid,String postState);
 
-    ResponseResult<String> takeoffProject(Long pid);
+    ResponseResult<String> takeoffProject(String pid);
 
-    ResponseResult<String> reCoverProjectByPid(Long pid);
+    ResponseResult<String> reCoverProjectByPid(String pid);
 
 
 }

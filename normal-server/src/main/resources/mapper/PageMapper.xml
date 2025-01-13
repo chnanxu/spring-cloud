@@ -7,9 +7,9 @@
         update item_details set read_times=read_times+1 where pid=#{pid}
     </update>
 
-    <select id="getPageDetails" resultType="Item_Details">
-        select * from item_details where pid=${pid}
-    </select>
+<!--    <select id="getPageDetails" resultType="Item_Details">-->
+<!--        select * from item_details where pid=${pid}-->
+<!--    </select>-->
 
     <select id="getAuthorOtherByUid">
         select * from item_details

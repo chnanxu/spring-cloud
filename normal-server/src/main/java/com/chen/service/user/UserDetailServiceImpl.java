@@ -9,6 +9,9 @@ import com.chen.mapper.user.UserMapper;
 import com.chen.pojo.user.Oauth2ThirdAccount;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.pojo.user.User;
+import com.chen.pojo.user.UserPrivacy;
+import com.chen.utils.result.CommonCode;
+import com.chen.utils.result.ResponseResult;
 import com.chen.utils.util.SecurityConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -35,18 +38,6 @@ public class UserDetailServiceImpl extends ServiceImpl<Oauth2BasicUserMapper,Use
     private final UserMapper userMapper;
 
     private final ThirdAccountMapper thirdAccountMapper;
-
-
-    @Override
-    public String saveByThirdAccount(Oauth2ThirdAccount thirdAccount) {
-        User basicUser = new User();
-        basicUser.setUname(thirdAccount.getName());
-        basicUser.setUser_img(thirdAccount.getAvatarUrl());
-        basicUser.setDeleted((byte) 0);
-        basicUser.setSourceFrom(thirdAccount.getType());
-        this.save(basicUser);
-        return basicUser.getUid();
-    }
 
     @Override
     public Oauth2UserinfoResult getLoginUserInfo() {
@@ -298,7 +289,12 @@ public class UserDetailServiceImpl extends ServiceImpl<Oauth2BasicUserMapper,Use
         return user;
     }
 
+    @Override
+    public ResponseResult<UserPrivacy> getPrivacySetting() {
+        Oauth2UserinfoResult user=getLoginUserInfo();
 
+        return new ResponseResult<>(CommonCode.SUCCESS,userMapper.getUserPrivacy(user.getUid()));
+    }
 
 
 }

@@ -2,8 +2,12 @@ package com.chen.utils.result;
 
 public enum CreateCode implements ResultCode {
 
+    POST_UNEXIST(false,1,"作品不存在"),
+
     //发布成功
     CREATE_SUCCESS(true,0,"发布成功"),
+    TAKEOFF_SUCCESS(true,0,"下架成功"),
+    DELETE_SUCCESS(true,0,"删除成功"),
 
     // 含有敏感词
     CONTAIN_SENSITIVEWORD(false,1,"含有敏感词"),

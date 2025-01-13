@@ -109,8 +109,11 @@ public class UserDetailServiceImpl extends ServiceImpl<Oauth2BasicUserMapper, Us
             return new ResponseResult<>(UserCode.USEREXIST);   //邮箱已注册
         }else{
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userMapper.createUser(user);  //创建用户角色信息
+
+            userMapper.createUserRole(user);  //创建用户角色信息
+            userMapper.createPrivacyInfo(user.getUid()); //创建用户隐私信息
             userMapper.insert(user);  //创建用户账号信息
+
             redisCache.deleteObject(EMAIL_CODE_KEY+user.getEmail());
             return new ResponseResult<>(UserCode.REGISTSUCCESS);  //注册成功
         }

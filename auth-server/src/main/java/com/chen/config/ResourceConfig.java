@@ -17,10 +17,9 @@ import org.springframework.security.web.server.csrf.CookieServerCsrfTokenReposit
 import org.springframework.security.web.util.UrlUtils;
 import org.springframework.web.filter.CorsFilter;
 
-
+@RequiredArgsConstructor
 @Configuration(proxyBeanMethods = false)
 @EnableWebSecurity
-@RequiredArgsConstructor
 @EnableMethodSecurity
 public class ResourceConfig {
 

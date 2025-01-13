@@ -3,7 +3,7 @@ package com.chen.controller;
 
 import com.chen.mapper.PageMapper;
 import com.chen.pojo.page.Item_Comments;
-import com.chen.pojo.page.Item_Details;
+import com.chen.pojo.page.Posts;
 import com.chen.pojo.page.My_Earnings;
 import com.chen.pojo.page.ReportItem;
 import com.chen.pojo.user.UserLikeComment;
@@ -31,26 +31,26 @@ public class PageController {
     //常规页面相关接口--------------------------------------------------------------------------------------------------------
 
     @GetMapping("/getPageDetails/{pid}")  //详细页面数据接口
-    public ResponseResult<Item_Details> getPageDetails(@PathVariable long pid){
+    public ResponseResult<Posts> getPageDetails(@PathVariable String pid){
         
         return pageService.getPageDetails(pid);
     }
 
-    @GetMapping("/getAuthorOther/{pid}") //作者其他作品接口
-    public ResponseResult<List<Item_Details>> getAuthorOther(@PathVariable long pid){
+    @GetMapping("/getAuthorOther/{authorUid}/{pid}") //作者其他作品接口
+    public ResponseResult<List<Posts>> getAuthorOther(@PathVariable String authorUid,@PathVariable String pid){
 
-        return pageService.getAuthorOther(pid);
+        return pageService.getAuthorOther(authorUid,pid);
     }
 
     @GetMapping("/getPageDetailsComments/{pid}/{pageNumber}")  //评论数据接口
-    public ResponseResult<List<Item_Comments>> getPageDetailsComments(@PathVariable long pid,@PathVariable int pageNumber){
+    public ResponseResult<List<Item_Comments>> getPageDetailsComments(@PathVariable String pid,@PathVariable int pageNumber){
 
         return pageService.getPageDetailsComments(pid,pageNumber);
     }
 
 
     @PostMapping("/getAllSonComment/{pid}")   //获取所有子评论
-    public ResponseResult<List<Item_Comments>> getAllSonComment(@PathVariable long pid, @RequestBody long comment_id){
+    public ResponseResult<List<Item_Comments>> getAllSonComment(@PathVariable String pid, @RequestBody long comment_id){
 
 
         List<Item_Comments> result=pageService.getAllSonComment(pid,comment_id);
@@ -112,7 +112,7 @@ public class PageController {
 
     @PreAuthorize("hasAuthority('system:write')")
     @PostMapping("/likeDetails/{uid}/{pid}")  //点赞作品
-    public ResponseResult<String> likeDetails(@PathVariable String uid, @PathVariable long pid){
+    public ResponseResult<String> likeDetails(@PathVariable String uid, @PathVariable String pid){
 
         String message= pageService.onLikeDetails(uid,pid);
 

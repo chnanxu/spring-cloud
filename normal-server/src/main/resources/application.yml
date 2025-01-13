@@ -22,11 +22,7 @@ spring:
     username: root
     password: woaini1398
     url: jdbc:mysql://localhost:3306/lineben?serverTimezone=GMT%2B8
-  #  datasource: #配置数据源 SQL Server
-#    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-#    username: sa
-#    password: woaini1398
-#    url: jdbc:sqlserver://localhost:1433;databaseName=reactProject;encrypt=false;
+
   data:
     redis:
       port: 6379
@@ -38,6 +34,17 @@ spring:
           max-wait: -1   #最大阻塞等待时间，负值表示没有限制，默认-1
           max-idle: 8    #最大空闲连接数，默认8
           min-idle: 0    #最小空闲连接数，默认0
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      database: lineben
+      connectTimeout: 120000
+      socketTimeout: 60000
+      maxWaitTime: 120000
+      socketKeepAlive: true
+      uri: mongodb://lineben:lineben_connect_mongodb@localhost:27017/lineben
+
+
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss

@@ -1,15 +1,19 @@
 package com.chen.service.user;
 
 import com.chen.mapper.user.RecordMapper;
-import com.chen.pojo.page.Item_Details;
+import com.chen.pojo.page.Posts;
 import com.chen.pojo.record.Diary_Book;
 import com.chen.pojo.user.Oauth2UserinfoResult;
+import com.chen.repository.MongoDataPageAble;
+import com.chen.repository.create.PostRepository;
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.RecordCode;
 import com.chen.utils.result.ResponseResult;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,32 +23,40 @@ public class RecordServiceImpl implements RecordService{
     private final RecordMapper recordMapper;
 
     private final UserDetailService userDetailService;
+    private final PostRepository postRepository;
 
     @Override
-    public Oauth2UserinfoResult getUserInfo(String keywords) {
+    public ResponseResult<Oauth2UserinfoResult> getUserInfo(String keywords) {
         if(keywords==null){
-
+            return new ResponseResult<>(CommonCode.FAIL);
         }else{
-            return recordMapper.getUserInfo(keywords);
+            return new ResponseResult<>(CommonCode.SUCCESS,recordMapper.getUserInfo(keywords));
         }
-        return null;
+
     }
 
     @Override
-    public List<Item_Details> getUserProject(String keywords) {
-
+    public ResponseResult<List<Posts>> getUserProject(String keywords,Integer pageNumber,Integer pageSize) {
+        Oauth2UserinfoResult user= userDetailService.getLoginUserInfo();
+        MongoDataPageAble pageable=new MongoDataPageAble(pageNumber,pageSize, Sort.by(Sort.Direction.DESC,"createTime"));
+        List<Posts> posts;
         if(keywords==null){
-           Oauth2UserinfoResult user= userDetailService.getLoginUserInfo();
             if(user.getUid()==null){
-
+                return new ResponseResult<>(CommonCode.FAIL);
             }else{
-                return recordMapper.getUserProject(user.getUid());
+                posts=postRepository.findByUidOrderByCreateTimeDesc(user.getUid(),pageable).stream().toList();
+                return new ResponseResult<>(CommonCode.SUCCESS,posts);
             }
         }else{
-            return recordMapper.getUserProject(keywords);
+            posts=postRepository.findByUidOrderByCreateTimeDesc(keywords,pageable).stream().toList();
+            return new ResponseResult<>(CommonCode.SUCCESS, posts);
         }
 
-        return null;
+    }
+
+    @Override
+    public ResponseResult<Long> getSubscribeCount(String uid) {
+        return new ResponseResult<>(CommonCode.SUCCESS,recordMapper.getUserSubscribedCount(uid));
     }
 
     @Override

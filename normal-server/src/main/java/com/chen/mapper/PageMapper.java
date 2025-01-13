@@ -2,7 +2,7 @@ package com.chen.mapper;
 
 
 import com.chen.pojo.page.Item_Comments;
-import com.chen.pojo.page.Item_Details;
+import com.chen.pojo.page.Posts;
 import com.chen.pojo.page.My_Earnings;
 import com.chen.pojo.user.UserLikeComment;
 import org.apache.ibatis.annotations.Mapper;
@@ -16,17 +16,17 @@ import java.util.Map;
 @Repository
 public interface PageMapper {
 
-    void addReadTimes(long pid);
+    void addReadTimes(String pid);
 
-    Item_Details getPageDetails(long pid);
+    Posts getPageDetails(String pid);
 
-    List<Item_Details> getAuthorOtherByUid(String uid,String pid);
+    List<Posts> getAuthorOtherByUid(String uid, String pid);
 
-    List<Item_Comments> getPageDetailsComments(long pid,int pageNumber);
+    List<Item_Comments> getPageDetailsComments(String pid,int pageNumber);
 
     List<Item_Comments> getSonComments(long comment_id);
 
-    UserLikeComment getUserLikeComments(String uid,long pid,long comment_id);
+    UserLikeComment getUserLikeComments(String uid,String pid,long comment_id);
 
     @Options(useGeneratedKeys = true,keyColumn = "comment_id")
     void submitComment(Item_Comments commentData);
@@ -35,15 +35,15 @@ public interface PageMapper {
 
     void subtractCommentLikeTimes(long comment_id);
 
-    void subtractDetailLikeTimes(long pid);
+    void subtractDetailLikeTimes(String pid);
 
-    void addDetailLikeTimes(long pid);
+    void addDetailLikeTimes(String pid);
 
     Map getReCommentUname(long to_commentID);
 
     void deleteComment(long commentId);
 
-    void updateItemCommentSize(long pid);
+    void updateItemCommentSize(String pid);
 
     List<Item_Comments> getAllSonComment(long comment_id);
 

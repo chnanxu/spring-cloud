@@ -5,15 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@TableName("user_personalize")
-public class UserPersonalize {
+@AllArgsConstructor
+@TableName("user_privacy")
+public class UserPrivacy {
     private String uid;
-    private int type_id;
-    private String type_name;
-    private Integer read_times;
-    private String lastAccess_time;
+    private boolean hide_email;
+    private boolean hide_sex;
+    private boolean hide_homepage;
+    private boolean receive_message;
 }

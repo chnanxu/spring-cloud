@@ -6,7 +6,7 @@ import com.chen.mapper.user.UserMapper;
 import com.chen.pojo.community.Community;
 import com.chen.pojo.community.CommunityLeftNav;
 import com.chen.pojo.community.CommunityModule;
-import com.chen.pojo.page.Item_Details;
+import com.chen.pojo.page.Posts;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 
 import com.chen.service.user.UserDetailService;
@@ -77,8 +77,8 @@ public class CommunityServiceImpl implements CommunityService{
 
 
     @Override
-    public List<Item_Details> getCommunityDetailsBySortType(long community_id, int pageNum, String sortType) {
-        List<Item_Details> result;
+    public List<Posts> getCommunityDetailsBySortType(long community_id, int pageNum, String sortType) {
+        List<Posts> result;
 
         LocalDate queryTimeParameters=LocalDate.now();
 
@@ -115,13 +115,13 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     @Override
-    public ResponseResult<List<Item_Details>> getExclusiveData(long community_id) {
+    public ResponseResult<List<Posts>> getExclusiveData(long community_id) {
 
         return new ResponseResult<>(CommonCode.SUCCESS,communityMapper.getNews(community_id));
     }
 
     @Override
-    public ResponseResult<List<Item_Details>> getStrategy(long community_id){
+    public ResponseResult<List<Posts>> getStrategy(long community_id){
         return new ResponseResult<>(CommonCode.SUCCESS,communityMapper.getStrategy(community_id));
     }
 }

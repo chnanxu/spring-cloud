@@ -2,9 +2,7 @@ package com.chen.mapper;
 
 
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.chen.pojo.user.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -17,7 +15,10 @@ import org.springframework.stereotype.Repository;
 public interface UserMapper extends BaseMapper<User> {
 
     @Insert("insert into user_role values (#{uid},1,'用户')")
-    void createUser(User user);//创建用户
+    void createUserRole(User user);//创建用户
+
+    @Insert("insert into user_privacy values (#{uid},default,default,default,default);")
+    void createPrivacyInfo(String uid);
 
     @Select("select * from users where username=#{username} or phone=#{username} or email=#{username}")
     User findByName(String username);  //根据昵称查找

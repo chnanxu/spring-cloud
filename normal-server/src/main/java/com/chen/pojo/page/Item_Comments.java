@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Transient;
 
 import java.util.List;
 
@@ -12,16 +11,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Item_Comments {
-    private long comment_id;
+    private long commentId;
     private String content;
-    private long like_times;
+    private long likeTimes;
     private String uid;
     private String uname;
     private boolean isDelete;
-    private long pid;
-    private long root_commentID;
-    private long to_commentID;
-    private String update_time;
+    private String pid;
+    private long rootCommentID;
+    private long toCommentID;
+    private String updateTime;
     private String location;
     private String reuname;
     private String reuid;
@@ -36,6 +35,6 @@ public class Item_Comments {
     private boolean isUserLike;
 
     @TableField(exist = false)
-    private Item_Details item_detail;
+    private Posts item_detail;
 
 }

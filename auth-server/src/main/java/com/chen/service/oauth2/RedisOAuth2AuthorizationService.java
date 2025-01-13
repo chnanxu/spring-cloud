@@ -381,8 +381,7 @@ public class RedisOAuth2AuthorizationService implements OAuth2AuthorizationServi
      */
     private Map<String, Object> parseMap(String data) {
         try {
-            return MAPPER.readValue(data, new TypeReference<>() {
-            });
+            return MAPPER.readValue(data, new TypeReference<>() {});
         } catch (Exception ex) {
             throw new IllegalArgumentException(ex.getMessage(), ex);
         }

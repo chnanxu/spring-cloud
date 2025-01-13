@@ -1,7 +1,7 @@
 package com.chen.service;
 
 import com.chen.pojo.page.Item_Comments;
-import com.chen.pojo.page.Item_Details;
+import com.chen.pojo.page.Posts;
 import com.chen.pojo.page.My_Earnings;
 import com.chen.pojo.page.ReportItem;
 import com.chen.pojo.user.UserLikeComment;
@@ -15,13 +15,13 @@ import java.util.Map;
 public interface PageService {
 
 
-    ResponseResult<Item_Details> getPageDetails(long pid);
+    ResponseResult<Posts> getPageDetails(String pid);
 
-    ResponseResult<List<Item_Details>> getAuthorOther(long pid);
+    ResponseResult<List<Posts>> getAuthorOther(String authorUid,String pid);
 
-    ResponseResult<List<Item_Comments>> getPageDetailsComments(long pid,int pageNumber);
+    ResponseResult<List<Item_Comments>> getPageDetailsComments(String pid,int pageNumber);
 
-    List<Item_Comments> getAllSonComment(long pid,long comment_id);
+    List<Item_Comments> getAllSonComment(String pid,long comment_id);
 
     ResponseResult<Item_Comments> submitComment(Item_Comments commentData);
 
@@ -34,7 +34,7 @@ public interface PageService {
     void deleteComment(long commentId);
 
 
-    String onLikeDetails(String uid, long pid);
+    String onLikeDetails(String uid, String pid);
 
     ResponseResult<String> supportAuthor(My_Earnings item);
 

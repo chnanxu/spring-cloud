@@ -1,12 +1,28 @@
 services:
 
+  mongo:
+    image: mongo:latest
+    container_name: mongoDB
+    ports:
+      - 27017:27017
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=chenxuan
+      - MONGO_INITDB_ROOT_PASSWORD=woaini1398
+    volumes:
+      - /home/chenxuan/Documents/workspace/data/mongoDB/data:/data/db
+    command:
+      - "--auth"
+
+
   mysql:
     image: mysql:latest
     container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: woaini1398
     ports:
       - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: woaini1398
+    restart: always
     volumes:
       - /home/chenxuan/Documents/workspace/data/mysql/log:/var/log/mysql
       - /home/chenxuan/Documents/workspace/data/mysql/data:/var/lib/mysql
@@ -17,6 +33,7 @@ services:
     container_name: redis
     ports:
       - 6379:6379
+    restart: always
     volumes:
       - /home/chenxuan/Documents/workspace/data/redis/redis.conf:/etc/redis/redis.conf
       - /home/chenxuan/Documents/workspace/data/redis/data:/var/lib/redis
@@ -37,6 +54,7 @@ services:
   nginx:
     image: nginx:latest
     container_name: nginx
+    restart: always
     ports:
       - 80:80
       - 443:443

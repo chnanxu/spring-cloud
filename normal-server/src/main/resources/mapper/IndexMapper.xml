@@ -36,31 +36,6 @@
         select * from create_item
     </select>
 
-    <select id="findIndexByType_id" parameterType="int" resultType= "Item_Details">
-        select uid,uname,pid,type_id,type_name,detail_type,title,simple_text,content,cover_img,href,tag,create_time,read_times,like_times,comments_times,favorites
-        from item_details
-        where type_id=${type_id} and detail_type=#{articleType}
-        order by favorites desc
-        LIMIT 0,18
-    </select>
-
-    <select id="findIndexByRandom">
-        select uid,uname,pid,type_id,type_name,detail_type,title,simple_text,content,cover_img,href,tag,create_time,read_times,like_times,comments_times,favorites
-        from item_details
-        where detail_type=#{articleType}
-        order by create_time desc
-        LIMIT ${pageNum},24
-
-    </select>
-
-    <select id="findIndexByPercent" resultType="Item_Details">
-        select uid,uname,pid,type_id,type_name,detail_type,title,simple_text,content,cover_img,href,tag,create_time,read_times,like_times,comments_times,favorites
-        from item_details
-        where type_id=#{type_id} and detail_type=#{articleType}
-        order by create_time desc
-        LIMIT 0,24
-    </select>
-
     <select id="getUserPersonalize">
         select * from user_personalize where uid=#{uid}
     </select>

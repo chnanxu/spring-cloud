@@ -41,8 +41,6 @@ import java.util.Map;
 @Slf4j
 public class SecurityUtils {
 
-    private final RedisCache redisCache;
-
     private static final String CUSTOM_DEVICE_REDIRECT_URI = "/activate/redirect";
 
     private static final String CUSTOM_CONSENT_REDIRECT_URI = "/oauth2/consent/redirect";

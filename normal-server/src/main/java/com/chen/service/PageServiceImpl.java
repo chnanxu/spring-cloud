@@ -4,12 +4,14 @@ package com.chen.service;
 import com.chen.mapper.PageMapper;
 import com.chen.mapper.user.UserMapper;
 import com.chen.pojo.page.Item_Comments;
-import com.chen.pojo.page.Item_Details;
+import com.chen.pojo.page.Posts;
 import com.chen.pojo.page.My_Earnings;
 import com.chen.pojo.page.ReportItem;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.pojo.user.UserLikeComment;
 
+import com.chen.repository.MongoDataPageAble;
+import com.chen.repository.create.PostRepository;
 import com.chen.service.user.UserDetailService;
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.PageCode;
@@ -17,6 +19,7 @@ import com.chen.utils.result.ResponseResult;
 import com.chen.utils.util.RedisCache;
 import com.github.houbb.sensitive.word.core.SensitiveWordHelper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,6 +40,7 @@ public class PageServiceImpl implements PageService{
     private final UserMapper userMapper;
 
     private final UserDetailService userDetailService;
+    private final PostRepository postRepository;
 
     @Override  //获取回复用户名称
     public ResponseResult<Map> getReCommentUname(long to_commentID) {
@@ -52,44 +56,40 @@ public class PageServiceImpl implements PageService{
 
 
     @Override  //获取页面详情
-    public ResponseResult<Item_Details> getPageDetails(long pid) {
+    public ResponseResult<Posts> getPageDetails(String pid) {
 
-        pageMapper.addReadTimes(pid);
 
-        Item_Details result= pageMapper.getPageDetails(pid);
+        Posts result= postRepository.findById(pid).orElse(null);
         Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
-        if(user.getUid()!=null){
-            if(userMapper.getUserPersonalizeByType_id(user.getUid(),result.getType_id())!=null){
-                userMapper.addUserPersonalizeTimes(user.getUid(),result.getType_id());
-            }else{
-                userMapper.createUserPersonalize(user.getUid(),result.getType_id(),result.getType_name());
-            }
-        }
+
 
         if(result==null){
             return new ResponseResult<>(PageCode.DETAIL_TAKEOFF,null);
         }else{
-            return new ResponseResult<>(PageCode.GET_SUCCESS,result);
-        }
 
+            if(user.getUid()!=null){
+                if(userMapper.getUserPersonalizeByType_id(user.getUid(),result.getTypeId())!=null){
+                    userMapper.addUserPersonalizeTimes(user.getUid(),result.getTypeId());
+                }else{
+                    userMapper.createUserPersonalize(user.getUid(),result.getTypeId(),result.getTypeName());
+                }
+            }
+            return new ResponseResult<>(PageCode.GET_SUCCESS,result);
+
+        }
 
     }
 
     @Override   //获取作者其他作品
-    public ResponseResult<List<Item_Details>> getAuthorOther(long pid) {
-        Item_Details detail=pageMapper.getPageDetails(pid);
-
-        List<Item_Details> result=pageMapper.getAuthorOtherByUid(detail.getUid(),detail.getPid());
-
-        if(result==null){
-            return new ResponseResult<>(PageCode.GET_FAILURE,null);
-        }
-
+    public ResponseResult<List<Posts>> getAuthorOther(String authorUid,String pid) {
+        MongoDataPageAble pageAble=new MongoDataPageAble(1,5, Sort.by(Sort.Direction.DESC,"createTime"));
+        List<Posts> result=postRepository.findByUidAndPidNotOrderByCreateTimeDesc(authorUid,pid,pageAble).stream().toList();
+        
         return new ResponseResult<>(PageCode.GET_SUCCESS,result);
     }
 
     @Override    //获取页面评论
-    public ResponseResult<List<Item_Comments>> getPageDetailsComments(long pid,int pageNumber) {
+    public ResponseResult<List<Item_Comments>> getPageDetailsComments(String pid,int pageNumber) {
         List<Item_Comments> rootComments;
 
         rootComments= pageMapper.getPageDetailsComments(pid,pageNumber*8-8);   //获取顶级评论列表
@@ -98,30 +98,30 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override   //获取全部子评论
-    public List<Item_Comments> getAllSonComment(long pid,long comment_id){
+    public List<Item_Comments> getAllSonComment(String pid,long comment_id){
 
         List<Item_Comments> rootComments= pageMapper.getAllSonComment(comment_id);
 
         return getItemComments(pid, rootComments);
     }
     //获取子评论逻辑实现
-    private List<Item_Comments> getItemComments(long pid, List<Item_Comments> rootComments) {
+    private List<Item_Comments> getItemComments(String pid, List<Item_Comments> rootComments) {
         Oauth2UserinfoResult userInfo=userDetailService.getLoginUserInfo();
         if(userInfo==null){
             for (Item_Comments commentItem:rootComments   //获取顶级评论的前三条子评论列表
             ) {
-                commentItem.setSonList(pageMapper.getSonComments(commentItem.getComment_id()));
+                commentItem.setSonList(pageMapper.getSonComments(commentItem.getCommentId()));
             }
         }else{
             for (Item_Comments commentItem:rootComments   //获取顶级评论的前三条子评论列表
             ) {
-                if(pageMapper.getUserLikeComments(userInfo.getUid(),pid,commentItem.getComment_id())!=null){    //用户是否点赞
+                if(pageMapper.getUserLikeComments(userInfo.getUid(),pid,commentItem.getCommentId())!=null){    //用户是否点赞
                     commentItem.setUserLike(true);
                 }
-                commentItem.setSonList(pageMapper.getSonComments(commentItem.getComment_id()));
+                commentItem.setSonList(pageMapper.getSonComments(commentItem.getCommentId()));
                 for (Item_Comments sonCommentItem:commentItem.getSonList()
                 ) {
-                    if(pageMapper.getUserLikeComments(userInfo.getUid(),pid,sonCommentItem.getComment_id())!=null){  //用户是否点赞
+                    if(pageMapper.getUserLikeComments(userInfo.getUid(),pid,sonCommentItem.getCommentId())!=null){  //用户是否点赞
                         sonCommentItem.setUserLike(true);
                     }
                 }
@@ -164,20 +164,20 @@ public class PageServiceImpl implements PageService{
     @Override   //点赞评论
     public String onLikeComment(UserLikeComment userLikeComment) {
 
-        if(pageMapper.getUserLikeComments(userLikeComment.getUid(),userLikeComment.getPid(),userLikeComment.getComment_id())!=null){
-            userMapper.deleteUserLikeComment(userLikeComment.getUid(), userLikeComment.getPid(), userLikeComment.getComment_id());
-            pageMapper.subtractCommentLikeTimes(userLikeComment.getComment_id());
+        if(pageMapper.getUserLikeComments(userLikeComment.getUid(),userLikeComment.getPid(),userLikeComment.getCommentId())!=null){
+            userMapper.deleteUserLikeComment(userLikeComment.getUid(), userLikeComment.getPid(), userLikeComment.getCommentId());
+            pageMapper.subtractCommentLikeTimes(userLikeComment.getCommentId());
             return "已取消点赞";
         }else{
-            userMapper.addUserLikeComment(userLikeComment.getUid(), userLikeComment.getPid(), userLikeComment.getComment_id());
-            pageMapper.addCommentLikeTimes(userLikeComment.getComment_id());
+            userMapper.addUserLikeComment(userLikeComment.getUid(), userLikeComment.getPid(), userLikeComment.getCommentId());
+            pageMapper.addCommentLikeTimes(userLikeComment.getCommentId());
             return "已点赞";
         }
 
     }
 
     @Override //点赞作品
-    public String onLikeDetails(String uid, long pid) {
+    public String onLikeDetails(String uid, String pid) {
         if(userMapper.getUserLikeDetails(uid,pid)!=null){
             userMapper.deleteUserLikeDetails(uid,pid);
             pageMapper.subtractDetailLikeTimes(pid);

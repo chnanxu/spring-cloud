@@ -1,10 +1,9 @@
 package com.chen.controller;
 
 
-import com.chen.pojo.community.Community;
 import com.chen.pojo.community.CommunityLeftNav;
 import com.chen.pojo.community.CommunityModule;
-import com.chen.pojo.page.Item_Details;
+import com.chen.pojo.page.Posts;
 import com.chen.pojo.user.OnlineUser;
 import com.chen.service.CommunityService;
 import com.chen.utils.result.CommonCode;
@@ -46,9 +45,9 @@ public class CommunityController {
     }
 
     @GetMapping("/getCommunityDetails/{id}/{sortType}/{pageNum}")    //社区详情
-    public ResponseResult<List<Item_Details>> getCommunityDetails(@PathVariable long id,@PathVariable String sortType,@PathVariable int pageNum){
+    public ResponseResult<List<Posts>> getCommunityDetails(@PathVariable long id, @PathVariable String sortType, @PathVariable int pageNum){
 
-        List<Item_Details> result=communityService.getCommunityDetailsBySortType(id,pageNum,sortType);
+        List<Posts> result=communityService.getCommunityDetailsBySortType(id,pageNum,sortType);
 
         return new ResponseResult<>(CommonCode.SUCCESS,result);
     }
@@ -68,13 +67,13 @@ public class CommunityController {
     }
 
     @GetMapping("/getNews/{community_id}")
-    public ResponseResult<List<Item_Details>> getExclusiveData(@PathVariable long community_id){
+    public ResponseResult<List<Posts>> getExclusiveData(@PathVariable long community_id){
 
         return communityService.getExclusiveData(community_id);
     }
 
     @GetMapping("/getStrategy/{community_id}")
-    public ResponseResult<List<Item_Details>> getStrategy(@PathVariable long community_id){
+    public ResponseResult<List<Posts>> getStrategy(@PathVariable long community_id){
         return communityService.getStrategy(community_id);
     }
 

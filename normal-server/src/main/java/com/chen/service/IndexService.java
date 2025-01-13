@@ -3,7 +3,7 @@ package com.chen.service;
 
 import com.chen.pojo.page.All_Type;
 import com.chen.pojo.page.HotTag;
-import com.chen.pojo.page.Item_Details;
+import com.chen.pojo.page.Posts;
 import com.chen.utils.result.ResponseResult;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -19,12 +19,11 @@ public interface IndexService {
 
     ResponseResult<List<HotTag>> getHotTag(String keywords, int pageNumber);
 
+    ResponseResult<List<Posts>> getIndex(Integer typeId,Integer pageNumber,Integer pageSize, String articleType);
 
-    ResponseResult<List<Item_Details>> getIndex(int type_id,String articleType);
+    ResponseResult<Map<Integer,List<Posts>>> getAnnouncement(String announcementCommunitySortType, String announcementSortType);
 
-    ResponseResult<Map<Integer,List<Item_Details>>> getAnnouncement(String announcementCommunitySortType,String announcementSortType);
-
-    ResponseResult<Map<String,List<Item_Details>>> getAnnouncementByCommunityId(Integer community_id,String announcementSortType);
+    ResponseResult<Map<String,List<Posts>>> getAnnouncementByCommunityId(Integer community_id, String announcementSortType);
 
     List<String> findUserItem();
 
@@ -32,5 +31,5 @@ public interface IndexService {
 
     List<String> searchTempList(String text);
 
-    List<Item_Details> getSearchDetails(String keywords,String articleType,int pageNum);
+    List<Posts> getSearchDetails(String keywords, String articleType, int pageNum);
 }

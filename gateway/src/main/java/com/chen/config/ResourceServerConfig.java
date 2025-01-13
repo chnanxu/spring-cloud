@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Role;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -25,12 +24,10 @@ import org.springframework.security.oauth2.server.resource.authentication.Reacti
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.ServerAuthenticationEntryPoint;
 import org.springframework.security.web.server.authorization.ServerAccessDeniedHandler;
-import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
-import org.springframework.security.web.server.csrf.XorServerCsrfTokenRequestAttributeHandler;
-import org.springframework.security.web.server.header.XXssProtectionServerHttpHeadersWriter;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.Arrays;
 
 @SpringBootConfiguration
 @RequiredArgsConstructor
@@ -45,6 +42,8 @@ public class ResourceServerConfig{
 
         http.csrf(ServerHttpSecurity.CsrfSpec::disable);
         http.cors(ServerHttpSecurity.CorsSpec::disable);
+
+        System.out.println(Arrays.toString(customSecurityProperties.getIgnoreUriList().toArray(new String[0])));
 
         http.authorizeExchange((authorize)->authorize
                 .pathMatchers(customSecurityProperties.getIgnoreUriList().toArray(new String[0])).permitAll()
@@ -65,12 +64,12 @@ public class ResourceServerConfig{
         return http.build();
     }
 
-    @Bean
-    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-    Advisor preAuthorize(){
-        return AuthorizationManagerBeforeMethodInterceptor.preAuthorize();
-    }
-
+//    @Bean
+//    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+//    Advisor preAuthorize(){
+//        return AuthorizationManagerBeforeMethodInterceptor.preAuthorize();
+//    }
+//
 
     /**
      * 自定义jwt解析器，设置解析出来的权限信息的前缀于在jwt中的key

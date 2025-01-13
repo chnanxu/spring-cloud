@@ -6,7 +6,7 @@ import com.chen.mapper.PageMapper;
 import com.chen.mapper.user.UserMapper;
 import com.chen.pojo.community.Community;
 import com.chen.pojo.page.Item_Comments;
-import com.chen.pojo.page.Item_Details;
+import com.chen.pojo.page.Posts;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.pojo.user.User_likeuser;
 import com.chen.utils.result.CommonCode;
@@ -120,11 +120,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseResult<Map<String,List<Item_Details>>> getSubscribeProject(String queryDate,String uid,Integer pageNumber){
+    public ResponseResult<Map<String,List<Posts>>> getSubscribeProject(String queryDate, String uid, Integer pageNumber){
 
         Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
 
-        Map<String,List<Item_Details>> result=new HashMap<>();
+        Map<String,List<Posts>> result=new HashMap<>();
 
         //所有订阅用户
         if(uid.equals("all")){
@@ -135,21 +135,21 @@ public class UserServiceImpl implements UserService {
             }else{
                 //查询所有日期
                 if(queryDate.equals("all")){
-                    List<Item_Details> details=new ArrayList<>();
+                    List<Posts> details=new ArrayList<>();
                     for (User_likeuser likeuser:likeUsers){
                         details.addAll(userMapper.getSubscribeProjectAll(likeuser.getLike_uid(),pageNumber*10-10));
 
                     }
                     SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
                     Date date;
-                    List<Item_Details> dateGroup;
+                    List<Posts> dateGroup;
                     //循环比对，将同一天发布的内容存放到map对象中
                     try{
-                        for(Item_Details detail:details){
-                            date= dateFormat.parse(detail.getCreate_time());
+                        for(Posts detail:details){
+                            date= dateFormat.parse(detail.getCreateTime());
                             dateGroup=new ArrayList<>();
-                            for(Item_Details detail2:details){
-                                if(date.equals(dateFormat.parse(detail2.getCreate_time()))){
+                            for(Posts detail2:details){
+                                if(date.equals(dateFormat.parse(detail2.getCreateTime()))){
                                     dateGroup.add(detail2);
                                 }
                             }

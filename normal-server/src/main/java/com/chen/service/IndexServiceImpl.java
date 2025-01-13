@@ -5,28 +5,30 @@ import com.chen.mapper.IndexMapper;
 import com.chen.pojo.community.Community;
 import com.chen.pojo.page.All_Type;
 import com.chen.pojo.page.HotTag;
-import com.chen.pojo.page.Item_Details;
+import com.chen.pojo.page.Posts;
 import com.chen.pojo.user.Oauth2UserinfoResult;
 import com.chen.pojo.user.UserPersonalize;
+import com.chen.repository.MongoDataPageAble;
+import com.chen.repository.create.PostRepository;
 import com.chen.service.user.UserDetailService;
 import com.chen.service.user.UserService;
 import com.chen.utils.result.CommonCode;
 import com.chen.utils.result.ResponseResult;
 import com.chen.utils.util.RedisCache;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class IndexServiceImpl implements IndexService {
 
     private final IndexMapper indexMapper;
+    private final PostRepository postRepository;
     private final CommunityMapper communityMapper;
     private final UserDetailService userDetailService;
     private final UserService userService;
@@ -60,42 +62,47 @@ public class IndexServiceImpl implements IndexService {
         return indexMapper.getLeftNavbar();
     }
 
-    public ResponseResult<List<Item_Details>> getIndex(int type_id,String articleType){
+    public ResponseResult<List<Posts>> getIndex(Integer typeId,Integer pageNumber,Integer pageSize, String articleType){
 
         Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
-        List<Item_Details> result =new ArrayList<>();
+        List<Posts> result=new ArrayList<>();
+        MongoDataPageAble pageAble=new MongoDataPageAble(pageNumber,pageSize, Sort.by(Sort.Direction.DESC,"createTime"));
 
         if(user.getUid()==null){
-            if(type_id==0){
-                result=indexMapper.findIndexByRandom(0,articleType);
+            if(typeId==0){
+                result=postRepository.findByOrderByCreateTimeDesc(pageAble).stream().toList(); //推荐算法待定
             }else{
-                result=indexMapper.findIndexByType_id(type_id,articleType);
+                result=postRepository.findByTypeIdOrderByCreateTimeDesc(typeId,pageAble).stream().toList();
             }
 
         }else{
-            if(type_id==0){
+            if(typeId==0){
                 List<UserPersonalize> user_personalizeTag=indexMapper.getUserPersonalize(user.getUid());
 
                 if(user_personalizeTag==null){
-                    result=indexMapper.findIndexByRandom(0,articleType);
+                    result=postRepository.findByOrderByCreateTimeDesc(pageAble).stream().toList();//推荐算法待定
                 }else{
                     int result_index=1;
-                    float user_read_count=0;
-                    Map type_map=new HashMap();
+                    int user_read_count=0;
+                    Map<Integer,Integer> type_map=new HashMap();
 
                     for (UserPersonalize item:user_personalizeTag
                     ) {
                         user_read_count=user_read_count+item.getRead_times();
                     }
 
+                    List<Posts> postsList=new LinkedList<>();
+
                     for (UserPersonalize item:user_personalizeTag
                     ) {
-                        type_map.put(item.getType_id(),item.getRead_times()/user_read_count*18);
-                        result.addAll(indexMapper.findIndexByPercent(item.getType_id(),Math.round((item.getRead_times()/user_read_count*18)),articleType));
+                        int percent=item.getRead_times()/user_read_count*pageSize;
+                        type_map.put(item.getType_id(),percent);
+                        pageAble.setPageSize(percent);
+                        postsList.addAll(postRepository.findByTypeIdOrderByCreateTimeDesc(item.getType_id(),pageAble).stream().toList());
                     }
                 }
             }else{
-                result=indexMapper.findIndexByType_id(type_id,articleType);
+                result=postRepository.findByTypeIdOrderByCreateTimeDesc(typeId,pageAble).stream().toList();
             }
 
         }
@@ -103,11 +110,11 @@ public class IndexServiceImpl implements IndexService {
     }
 
     @Override
-    public ResponseResult<Map<Integer,List<Item_Details>>> getAnnouncement(String announcementCommunitySortType,String announcementSortType) {
+    public ResponseResult<Map<Integer,List<Posts>>> getAnnouncement(String announcementCommunitySortType, String announcementSortType) {
 
         Oauth2UserinfoResult user=userDetailService.getLoginUserInfo();
 
-        Map<Integer,List<Item_Details>> result=new HashMap<>();
+        Map<Integer,List<Posts>> result=new HashMap<>();
 
         //作品查询按日期查询  日、周、月、年等
         LocalDate query_date=getQuery_date(announcementSortType);
@@ -135,11 +142,11 @@ public class IndexServiceImpl implements IndexService {
     }
 
     @Override
-    public ResponseResult<Map<String,List<Item_Details>>> getAnnouncementByCommunityId(Integer community_id,String announcementSortType) {
+    public ResponseResult<Map<String,List<Posts>>> getAnnouncementByCommunityId(Integer community_id, String announcementSortType) {
 
         LocalDate query_date=getQuery_date(announcementSortType);
-        Map<String,List<Item_Details>> result=new HashMap<>();
-        List<Item_Details> announce=new ArrayList<>();
+        Map<String,List<Posts>> result=new HashMap<>();
+        List<Posts> announce=new ArrayList<>();
         if(community_id==0){
             announce=indexMapper.getAnnounce(community_id,query_date);
             result.put(communityMapper.getCommunityById(community_id).getCommunity_name(),announce);
@@ -229,7 +236,7 @@ public class IndexServiceImpl implements IndexService {
 
 
     @Override
-    public List<Item_Details> getSearchDetails(String keywords,String articleType,int pageNum) {
+    public List<Posts> getSearchDetails(String keywords, String articleType, int pageNum) {
 
         if(keywords==null){
             return indexMapper.findIndexByRandom(pageNum,articleType);

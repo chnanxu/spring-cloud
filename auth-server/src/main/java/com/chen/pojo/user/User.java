@@ -21,7 +21,7 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("user")
+@TableName("users")
 @JsonSerialize
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements UserDetails, Serializable {
@@ -43,8 +43,8 @@ public class User implements UserDetails, Serializable {
     private boolean enabled;
     private String location;
     private int level;
-    private int exp_point;
-    private int subscription_count;
+    private int exp;
+    private int subscription;
     private boolean clock;
     private float balance;
 

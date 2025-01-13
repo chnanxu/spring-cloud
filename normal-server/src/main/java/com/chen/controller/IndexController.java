@@ -3,7 +3,7 @@ package com.chen.controller;
 
 import com.chen.pojo.page.All_Type;
 import com.chen.pojo.page.HotTag;
-import com.chen.pojo.page.Item_Details;
+import com.chen.pojo.page.Posts;
 import com.chen.service.IndexService;
 
 import com.chen.utils.result.CommonCode;
@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-
 
 @RestController
 @RequiredArgsConstructor
@@ -55,22 +53,22 @@ public class IndexController {
         return new ResponseResult<>(CommonCode.SUCCESS,result);
     }
 
-    @GetMapping(value={"/","/index/{type_id}/{articleType}"})
-    public ResponseResult<List<Item_Details>> load(@PathVariable int type_id,@PathVariable String articleType){
+    @GetMapping(value={"/","/index/{typeId}/{pageNumber}/{pageSize}/{articleType}"})
+    public ResponseResult<List<Posts>> load(@PathVariable int typeId,@PathVariable int pageNumber,@PathVariable int pageSize, @PathVariable String articleType){
 
-        return indexService.getIndex(type_id,articleType);
+        return indexService.getIndex(typeId,pageNumber,pageSize,articleType);
 
     }
 
     @GetMapping(value={"/getAnnouncement/{announcementCommunitySortType}/{announcementSortType}"})
-    public ResponseResult<Map<Integer, List<Item_Details>>> getAnnouncement(@PathVariable String announcementCommunitySortType, @PathVariable String announcementSortType){
+    public ResponseResult<Map<Integer, List<Posts>>> getAnnouncement(@PathVariable String announcementCommunitySortType, @PathVariable String announcementSortType){
 
         return indexService.getAnnouncement(announcementCommunitySortType,announcementSortType);
 
     }
 
     @GetMapping("/getAnnouncementByCommunityId/{community_id}/{announcementSortType}")
-    public ResponseResult<Map<String,List<Item_Details>>> getAnnouncementByCommunityName(@PathVariable Integer community_id, @PathVariable String announcementSortType){
+    public ResponseResult<Map<String,List<Posts>>> getAnnouncementByCommunityName(@PathVariable Integer community_id, @PathVariable String announcementSortType){
 
         return indexService.getAnnouncementByCommunityId(community_id,announcementSortType);
     }
@@ -104,9 +102,9 @@ public class IndexController {
 
 
     @GetMapping(value={"/getSearchDetails/{keywords}/{articleType}/{pageNum}","/getSearchDetails/{articleType}/{pageNum}"})
-    public ResponseResult<List<Item_Details>> getSearchDetails(@PathVariable(required = false) String keywords,@PathVariable String articleType,@PathVariable int pageNum){
+    public ResponseResult<List<Posts>> getSearchDetails(@PathVariable(required = false) String keywords, @PathVariable String articleType, @PathVariable int pageNum){
 
-        List<Item_Details>  result=indexService.getSearchDetails(keywords,articleType,pageNum*24-24);
+        List<Posts>  result=indexService.getSearchDetails(keywords,articleType,pageNum*24-24);
 
         return new ResponseResult<>(CommonCode.SUCCESS,result);
     }

@@ -27,8 +27,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RedisOAuth2AuthorizationConsentService implements OAuth2AuthorizationConsentService {
 
-
-
     private final RegisteredClientRepository registeredClientRepository;
 
     private final RedisAuthorizationConsentRepository authorizationConsentRepository;
